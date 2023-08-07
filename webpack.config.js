@@ -1,8 +1,10 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config();
+import { fileURLToPath } from "url";
+import path from "path";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-const path = require("path");
-
-module.exports = {
+const config = {
   mode: "development",
   entry: path.join(__dirname, "/src/index.jsx"),
   output: {
@@ -22,3 +24,5 @@ module.exports = {
     ],
   },
 };
+
+export default config;
