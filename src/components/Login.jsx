@@ -18,7 +18,7 @@ function Login({ user, setUser }) {
     if (user.id) {
       navigate("/");
     }
-  });
+  }, [user]);
   const handleSubmit = async () => {
     try {
       console.log("USERNAME: ", username);

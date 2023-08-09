@@ -11,6 +11,7 @@ import SignUp from "./SignUp.jsx";
 import Saved from "./Saved.jsx";
 import Home from "./Home.jsx";
 import Login from "./Login.jsx";
+import HikeDetails from "./HikeDetails.jsx";
 import axios from "axios";
 
 const App = () => {
@@ -33,7 +34,7 @@ const App = () => {
       }
     });
   }, []);
-  // console.log("USER; ", user);
+  console.log("USER; ", user);
 
   return (
     // <BrowserRouter>
@@ -78,6 +79,7 @@ const App = () => {
           path="/login"
           element={<Login user={user} setUser={setUser} />}
         />
+        <Route path="/details" element={<HikeDetails />}></Route>
       </Routes>
     </>
     // </BrowserRouter>

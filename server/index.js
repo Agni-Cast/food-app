@@ -38,7 +38,7 @@ app.use(
 );
 
 app.get("/session", (req, res) => {
-  console.log("SESSION -server req.session: ", req.session);
+  // console.log("SESSION -server req.session: ", req.session);
   res.send(req.session);
 });
 
@@ -48,7 +48,7 @@ app.get("/logout", (req, res) => {
 });
 
 app.post("/login", async (req, res) => {
-  console.log("req.query.username: ", req.query.username);
+  // console.log("req.query.username: ", req.query.username);
   try {
     const dbQuery = await db.query("SELECT * FROM users WHERE username=$1", [
       req.query.username,
@@ -60,7 +60,7 @@ app.post("/login", async (req, res) => {
     } else {
       let user = dbQuery.rows[0];
       valid = await bcrypt.compare(req.query.password, user.password);
-      console.log("valid: ", valid);
+      // console.log("valid: ", valid);
       if (valid === true) {
         // console.log("VALID");
         req.session.username = req.query.username;
@@ -85,6 +85,26 @@ app.post("/signup", async (req, res) => {
   req.session.user_id = dbQuery.rows[0].user_id;
   // console.log("SIGNUP DATA sent back:", dbQuery.rows[0]);
   res.send(dbQuery.rows[0]);
+});
+
+////////////// trails /////////////
+
+app.get(`/thingstodo`, async (req, res) => {
+  // console.log(req.query.stateCode);
+  try {
+    const apiSearch = await axios.get(
+      `https://developer.nps.gov/api/v1/thingstodo?stateCode=${req.query.stateCode}&q=hike`,
+      {
+        headers: {
+          "x-api-key": process.env.APIKEY,
+        },
+      }
+    );
+    // console.log(apiSearch.data);
+    res.send(apiSearch.data);
+  } catch (err) {
+    console.log("ERROR Trails: ", err);
+  }
 });
 
 app.get("/*", function (req, res) {

@@ -18,7 +18,7 @@ function SignUp({ user, setUser }) {
     if (user.id) {
       navigate("/");
     }
-  });
+  }, [user]);
   const handleSubmit = (event) => {
     if (username !== "" && password !== "") {
       axios
