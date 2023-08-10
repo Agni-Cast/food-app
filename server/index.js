@@ -51,40 +51,55 @@ app.post("/login", async (req, res) => {
   // console.log("req.query.username: ", req.query.username);
   try {
     const dbQuery = await db.query("SELECT * FROM users WHERE username=$1", [
-      req.query.username,
+      req.body.username,
     ]);
     // console.log("dbQuery: ", dbQuery);
     let valid;
     if (dbQuery.rows.length === 0) {
-      res.send(JSON.stringify("NO USER"));
+      res.send("NO USER");
     } else {
       let user = dbQuery.rows[0];
-      valid = await bcrypt.compare(req.query.password, user.password);
+      console.log("LOGIN");
+      console.log(
+        "req.body.password: ",
+        req.body.password,
+        "user.password: ",
+        user.password
+      );
+      console.log(typeof req.body.password, typeof user.password);
+      valid = await bcrypt.compare(req.body.password, user.password);
       // console.log("valid: ", valid);
       if (valid === true) {
         // console.log("VALID");
-        req.session.username = req.query.username;
+        req.session.username = req.body.username;
         req.session.user_id = dbQuery.rows[0].user_id;
         res.send(dbQuery.rows[0]);
       }
     }
   } catch (error) {
-    console.log("ERROR: ", error);
+    console.log("LOGIN ERROR: ", error);
   }
 });
 
 app.post("/signup", async (req, res) => {
   console.log("req.body", req.body);
-  const saltPass = await bcrypt.genSalt(saltRounds);
-  const hashPass = await bcrypt.hash(req.body.password, saltPass);
-  const dbQuery = await db.query(
-    `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *`,
-    [req.body.username, hashPass]
-  );
-  req.session.username = req.body.username;
-  req.session.user_id = dbQuery.rows[0].user_id;
-  // console.log("SIGNUP DATA sent back:", dbQuery.rows[0]);
-  res.send(dbQuery.rows[0]);
+  try {
+    const saltPass = await bcrypt.genSalt(saltRounds);
+    console.log(typeof req.body.password, typeof saltPass);
+    const hashPass = await bcrypt.hash(req.body.password, saltPass);
+    console.log("SIGNUP");
+    console.log("hashPass: ", hashPass);
+    const dbQuery = await db.query(
+      `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *`,
+      [req.body.username, hashPass]
+    );
+    req.session.username = req.body.username;
+    req.session.user_id = dbQuery.rows[0].user_id;
+    // console.log("SIGNUP DATA sent back:", dbQuery.rows[0]);
+    res.send(dbQuery.rows[0]);
+  } catch (err) {
+    console.log("SIGNUP ERROR: ", err);
+  }
 });
 
 ////////////// trails /////////////

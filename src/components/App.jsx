@@ -22,6 +22,7 @@ const App = () => {
     axios.get("/logout").then((res) => {
       setUser({});
       navigate("/login");
+      localStorage.clear();
     });
   };
 
