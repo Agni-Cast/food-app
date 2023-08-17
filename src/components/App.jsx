@@ -13,10 +13,12 @@ import Home from "./Home.jsx";
 import Login from "./Login.jsx";
 import HikeDetails from "./HikeDetails.jsx";
 import axios from "axios";
+import SearchResult from "./SearchResult.jsx";
 
 const App = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
+  const [savedHikes, setSavedHikes] = useState([]);
 
   const handleLogOut = () => {
     axios.get("/logout").then((res) => {
@@ -34,9 +36,21 @@ const App = () => {
         setUser({ username: res.data.username, id: res.data.user_id });
       }
     });
-  }, []);
+  }, [user.id]);
   console.log("USER; ", user);
 
+  ///////////////////////////////////////////////////
+  // console.log("SAVED Hikes: ", savedHikes);
+  // useEffect(() => {}, [savedHikes]);
+  useEffect(() => {
+    if (user.id) {
+      axios.get(`/saved-hikes?user_id=${user.id}`).then((res) => {
+        setSavedHikes(res.data);
+      });
+    }
+  }, [user.id]);
+  // console.log("SAVED HIKES: ", savedHikes);
+  ////////////////////////////////////////////////////
   return (
     // <BrowserRouter>
     <>
@@ -70,8 +84,20 @@ const App = () => {
         )}
       </nav>
       <Routes>
-        <Route path="/" element={<Home user={user} />} />
-        <Route path="/saved" element={<Saved user={user} />} />
+        <Route
+          path="/"
+          element={
+            <Home
+              user={user}
+              savedHikes={savedHikes}
+              setSavedHikes={setSavedHikes}
+            />
+          }
+        />
+        <Route
+          path="/saved"
+          element={<Saved user={user} savedHikes={savedHikes} />}
+        />
         <Route
           path="/signup"
           element={<SignUp user={user} setUser={setUser} />}
@@ -81,6 +107,10 @@ const App = () => {
           element={<Login user={user} setUser={setUser} />}
         />
         <Route path="/details" element={<HikeDetails />}></Route>
+        {/* <Route
+          path="/searchResult"
+          element={<SearchResult user={user} />}
+        ></Route> */}
       </Routes>
     </>
     // </BrowserRouter>

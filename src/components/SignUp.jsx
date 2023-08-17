@@ -14,11 +14,13 @@ function SignUp({ user, setUser }) {
   const handleChangePassword = (event) => {
     setPassword(event.target.value);
   };
+
   useEffect(() => {
     if (user.id) {
       navigate("/");
     }
   }, [user]);
+
   const handleSubmit = (event) => {
     if (username !== "" && password !== "") {
       axios

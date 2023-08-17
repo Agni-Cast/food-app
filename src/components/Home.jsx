@@ -3,11 +3,12 @@ import axios from "axios";
 import SingleHike from "./SingleHike.jsx";
 import HikeDetails from "./HikeDetails.jsx";
 
-function Home() {
+function Home({ user, savedHikes, setSavedHikes }) {
   const [searchInput, setSearchInput] = useState("");
   const [hikesResult, setHikeResult] = useState(
     JSON.parse(localStorage.getItem("hikesResult")) || []
   );
+  const [save, setSave] = useState(true);
   // const [a, setA] = useState("BBBB");
 
   const handleInputChange = (event) => {
@@ -22,7 +23,7 @@ function Home() {
       setHikeResult(res.data.data);
     }
   };
-  console.log("HIKE RESULTS: ", hikesResult) || {};
+
   const handleKeyDown = (event) => {
     if (event.keyCode === 13) {
       handleSubmit();
@@ -31,6 +32,7 @@ function Home() {
   useEffect(() => {
     localStorage.setItem("hikesResult", JSON.stringify(hikesResult));
   }, [hikesResult]);
+
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("hikesResult"));
     if (data) {
@@ -62,6 +64,11 @@ function Home() {
                     hike={singleHike}
                     index={index}
                     hikesResult={hikesResult}
+                    user={user}
+                    searchInput={searchInput}
+                    save={save}
+                    savedHikes={savedHikes}
+                    setSavedHikes={setSavedHikes}
                   />
                 </div>
               );

@@ -7,7 +7,9 @@ function Login({ user, setUser }) {
   const [password, setPassword] = useState("");
   const [inputError, setInputError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+
   const navigate = useNavigate();
+
   const handleUsernameChange = (event) => {
     setUsername(event.target.value);
   };

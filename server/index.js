@@ -59,14 +59,14 @@ app.post("/login", async (req, res) => {
       res.send("NO USER");
     } else {
       let user = dbQuery.rows[0];
-      console.log("LOGIN");
-      console.log(
-        "req.body.password: ",
-        req.body.password,
-        "user.password: ",
-        user.password
-      );
-      console.log(typeof req.body.password, typeof user.password);
+      // console.log("LOGIN");
+      // console.log(
+      //   "req.body.password: ",
+      //   req.body.password,
+      //   "user.password: ",
+      //   user.password
+      // );
+      // console.log(typeof req.body.password, typeof user.password);
       valid = await bcrypt.compare(req.body.password, user.password);
       // console.log("valid: ", valid);
       if (valid === true) {
@@ -82,13 +82,13 @@ app.post("/login", async (req, res) => {
 });
 
 app.post("/signup", async (req, res) => {
-  console.log("req.body", req.body);
+  // console.log("req.body", req.body);
   try {
     const saltPass = await bcrypt.genSalt(saltRounds);
-    console.log(typeof req.body.password, typeof saltPass);
+    // console.log(typeof req.body.password, typeof saltPass);
     const hashPass = await bcrypt.hash(req.body.password, saltPass);
-    console.log("SIGNUP");
-    console.log("hashPass: ", hashPass);
+    // console.log("SIGNUP");
+    // console.log("hashPass: ", hashPass);
     const dbQuery = await db.query(
       `INSERT INTO users (username, password) VALUES ($1, $2) RETURNING *`,
       [req.body.username, hashPass]
@@ -115,11 +115,79 @@ app.get(`/thingstodo`, async (req, res) => {
         },
       }
     );
-    // console.log(apiSearch.data);
+    // console.log(apiSearch.data.data);
+    //////////
+
+    //////////
     res.send(apiSearch.data);
   } catch (err) {
     console.log("ERROR Trails: ", err);
   }
+});
+
+// Saving a hike
+app.post("/saved-hikes", async (req, res) => {
+  try {
+    const dbQuery = await db.query(
+      `INSERT INTO hikes (
+      user_id,
+      hike_id,
+      title,
+      state,
+      park,
+      summary,
+      summary_long,
+      duration,
+      pets,
+      pets_info,
+      reservation,
+      fee,
+      fee_info,
+      age,
+      image
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *`,
+      [
+        req.body.user_id,
+        req.body.hike_id,
+        req.body.title,
+        req.body.state,
+        req.body.park,
+        req.body.summary,
+        req.body.summary_long,
+        req.body.duration,
+        req.body.pets,
+        req.body.pets_info,
+        req.body.reservation,
+        req.body.fee,
+        req.body.fee_info,
+        req.body.age,
+        req.body.image,
+      ]
+    );
+    if (dbQuery.rows.length > 0) {
+      res.send("SAVED");
+    }
+  } catch (err) {
+    console.log("ERROR Saving: ", err);
+  }
+});
+
+app.get("/saved-hikes", async (req, res) => {
+  // console.log(req.query);
+  const dbQuery = await db.query("SELECT * FROM hikes WHERE user_id=$1", [
+    req.query.user_id,
+  ]);
+  // console.log(dbQuery.rows);
+  if (dbQuery.rows.length > 0) {
+    res.send(dbQuery.rows);
+  }
+});
+// Removing a hike
+app.delete("/saved-hikes", async (req, res) => {
+  // console.log(req.query.hike_id);
+  const dbQuery = await db.query("DELETE FROM hikes WHERE hike_id=$1", [
+    req.query.hike_id,
+  ]);
 });
 
 app.get("/*", function (req, res) {
