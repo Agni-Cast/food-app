@@ -165,7 +165,8 @@ app.post("/saved-hikes", async (req, res) => {
       ]
     );
     if (dbQuery.rows.length > 0) {
-      res.send("SAVED");
+      res.send(dbQuery.rows);
+      // res.send("SAVED");
     }
   } catch (err) {
     console.log("ERROR Saving: ", err);
@@ -182,12 +183,28 @@ app.get("/saved-hikes", async (req, res) => {
     res.send(dbQuery.rows);
   }
 });
+
+app.get("/check-saved-hike", async (req, res) => {
+  const dbQuery = await db.query(
+    `SELECT * FROM hikes WHERE user_id=$1 AND hike_id=$2`,
+    [req.query.user_id, req.query.hike_id]
+  );
+  if (dbQuery.rows.length > 0) {
+    res.send("HIKE SAVED");
+  }
+});
 // Removing a hike
 app.delete("/saved-hikes", async (req, res) => {
-  // console.log(req.query.hike_id);
-  const dbQuery = await db.query("DELETE FROM hikes WHERE hike_id=$1", [
-    req.query.hike_id,
+  const dbQuery = await db.query(
+    "DELETE FROM hikes WHERE user_id=$1 AND hike_id=$2",
+    [req.query.user_id, req.query.hike_id]
+  );
+  const dbQuery2 = await db.query(`SELECT * FROM hikes WHERE user_id=$1`, [
+    req.query.user_id,
   ]);
+  // if (dbQuery2.rows.length > 0) {
+  res.send(dbQuery2.rows);
+  // }
 });
 
 app.get("/*", function (req, res) {

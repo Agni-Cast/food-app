@@ -5,7 +5,8 @@ import Modal from "react-modal";
 import axios from "axios";
 
 function SingleHike({
-  /*hikesResult,*/ hike,
+  /*hikesResult,*/
+  hike,
   index,
   user,
   searchInput,
@@ -13,17 +14,23 @@ function SingleHike({
   save,
   savedHikes,
   setSavedHikes,
+  // hikesSaved,
+  // setHikesSaved,
+  // isSaved,
+  // setIsSaved,
+  // isUser,
 }) {
   const [clickedModal, setClickedModal] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [clickedSaved, setClickedSaved] = useState(false);
-  const [isSaved, setIsSaved] = useState(false);
+  // const [isSaved, setIsSaved] = useState(false);
   const [imageSource, setImageSource] = useState(
     hike.image || `${hike.images[0].url}`
   );
   const [parkSource, setParkSource] = useState(
     hike.park || hike.relatedParks[0].fullName
   );
+
   const navigate = useNavigate();
 
   const handleClick = (event) => {
@@ -55,14 +62,11 @@ function SingleHike({
     };
     try {
       const res = await axios.post("/saved-hikes", data);
-      if (res.data === "SAVED") {
+      // console.log(res.data);
+      if (res.data.length > 0) {
         setClickedSaved(true);
+        setSavedHikes([...savedHikes, res.data[0]]);
       }
-      const resGet = await axios
-        .get(`/saved-hikes?user_id=${user.id}`)
-        .then((res) => {
-          setSavedHikes(res.data);
-        });
     } catch (error) {
       console.log("ERROR SAVING HIKE: ", error);
     }
@@ -71,7 +75,11 @@ function SingleHike({
   const removeHike = (hikeToremove) => {
     // setClickedSaved(!clickedSaved);
     axios
-      .delete(`/saved-hikes?hike_id=${hikeToremove.hike_id}`)
+      .delete(`/saved-hikes?user_id=${user.id}&hike_id=${hikeToremove.hike_id}`)
+      .then((res) => {
+        console.log("POST RES: ", res.data);
+        setSavedHikes(res.data);
+      })
       .catch((error) => {
         console.log("ERROR REMOVING HIKE: ", error);
       });
@@ -93,6 +101,13 @@ function SingleHike({
           Save
         </button>
       ) : null}
+      {/* {!isSaved ? (
+        <button onClick={() => saveHike(hike)} disabled={clickedSaved}>
+          Save
+        </button>
+      ) : (
+        <button onClick={() => removeHike(hike)}>Remove</button>
+      )} */}
 
       {remove ? <button onClick={() => removeHike(hike)}>Remove</button> : null}
       {clickedModal === true ? (

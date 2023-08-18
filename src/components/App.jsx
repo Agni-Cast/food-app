@@ -37,19 +37,19 @@ const App = () => {
       }
     });
   }, [user.id]);
-  console.log("USER; ", user);
+  // console.log("USER; ", user);
 
   ///////////////////////////////////////////////////
   // console.log("SAVED Hikes: ", savedHikes);
-  // useEffect(() => {}, [savedHikes]);
   useEffect(() => {
     if (user.id) {
       axios.get(`/saved-hikes?user_id=${user.id}`).then((res) => {
+        // console.log(res.data);
         setSavedHikes(res.data);
       });
     }
   }, [user.id]);
-  // console.log("SAVED HIKES: ", savedHikes);
+  console.log("SAVED HIKES: ", savedHikes);
   ////////////////////////////////////////////////////
   return (
     // <BrowserRouter>
@@ -96,7 +96,13 @@ const App = () => {
         />
         <Route
           path="/saved"
-          element={<Saved user={user} savedHikes={savedHikes} />}
+          element={
+            <Saved
+              user={user}
+              savedHikes={savedHikes}
+              setSavedHikes={setSavedHikes}
+            />
+          }
         />
         <Route
           path="/signup"

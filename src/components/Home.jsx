@@ -9,13 +9,38 @@ function Home({ user, savedHikes, setSavedHikes }) {
     JSON.parse(localStorage.getItem("hikesResult")) || []
   );
   const [save, setSave] = useState(true);
-  // const [a, setA] = useState("BBBB");
+  // console.log("1 HIKES SAVED HOME: ", hikesSaved);
+  ///// added from singleHike, was cheking if each hike from resultHikes was in the database
+  ///// trying to get the saved hikes id's from the Home, store them in hikesSaved and check if any hike is present in both arrays
+  ///// if it is, show 'Remove' instead of 'Save'
+  // const [isSaved, setIsSaved] = useState(false);
+  // const [hikesSaved, setHikesSaved] = useState([]);
+  // const isUser = !user.id ? false : true;
+  // useEffect(() => {
+  //   if (isUser) {
+  //     axios.get(`/saved-hikes?user_id=${user.id}`).then((res) => {
+  //       let arr = res.data;
 
+  //       arr.map((one) => {
+  //         // console.log(">>>>>>>>>>>>>>", one.hike_id);
+  //         // console.log(hikesSaved);
+  //         setHikesSaved([...hikesSaved, one.hike_id]);
+  //         // setHikesSaved
+  //       });
+  //       setIsSaved(true);
+  //     });
+  //   }
+  // }, [isUser, hikesSaved]);
+  // console.log("2 HIKES SAVED HOME: ", hikesSaved);
+
+  // console.log("HIKES SAVED HOME: ", hikesSaved);
+  /////
+
+  // console.log("USER HOME: ", user);
   const handleInputChange = (event) => {
     // event.preventDefault();
     setSearchInput(event.target.value.toUpperCase());
   };
-  // console.log("input: ", searchInput);
 
   const handleSubmit = async () => {
     if (searchInput !== "" && searchInput !== undefined) {
@@ -69,6 +94,11 @@ function Home({ user, savedHikes, setSavedHikes }) {
                     save={save}
                     savedHikes={savedHikes}
                     setSavedHikes={setSavedHikes}
+                    // hikesSaved={hikesSaved}
+                    // setHikesSaved={setHikesSaved}
+                    // isSaved={isSaved}
+                    // setIsSaved={setIsSaved}
+                    // isUser={isUser}
                   />
                 </div>
               );
