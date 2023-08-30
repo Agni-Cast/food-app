@@ -30,7 +30,7 @@ const App = () => {
 
   useEffect(() => {
     axios.get("/session").then((res) => {
-      console.log("SESSION res: ", res);
+      // console.log("SESSION res: ", res);
       if (res.data.user_id) {
         // console.log("SESSION -client res.data.user_id: ", res.data.user_id);
         setUser({ username: res.data.username, id: res.data.user_id });

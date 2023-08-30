@@ -14,6 +14,7 @@ function SingleHike({
   save,
   savedHikes,
   setSavedHikes,
+  onSavedPage,
   // hikesSaved,
   // setHikesSaved,
   // isSaved,
@@ -23,6 +24,7 @@ function SingleHike({
   const [clickedModal, setClickedModal] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [clickedSaved, setClickedSaved] = useState(false);
+  const [saveOrRemove, setSaveOrRemove] = useState("Save");
   // const [isSaved, setIsSaved] = useState(false);
   const [imageSource, setImageSource] = useState(
     hike.image || `${hike.images[0].url}`
@@ -30,7 +32,9 @@ function SingleHike({
   const [parkSource, setParkSource] = useState(
     hike.park || hike.relatedParks[0].fullName
   );
-
+  // const [stateSource, setStateSource] = useState(
+  //   hike.state || hike.relatedParks[0].state
+  // );
   const navigate = useNavigate();
 
   const handleClick = (event) => {
@@ -43,20 +47,21 @@ function SingleHike({
   };
 
   const saveHike = async (hikeToSave) => {
+    // if (saveOrRemove === "Save") {
     const data = {
       user_id: user.id,
       hike_id: hikeToSave.id,
       title: hikeToSave.title,
-      state: searchInput,
+      parksource: searchInput /*hikeToSave.relatedParks[0].states*/,
       park: hikeToSave.relatedParks[0].fullName,
-      summary: hikeToSave.shortDescription,
-      summary_long: hikeToSave.longDescription,
+      shortdescription: hikeToSave.shortDescription,
+      longdescription: hikeToSave.longDescription,
       duration: hikeToSave.duration,
-      pets: hikeToSave.arePetsPermitted,
-      pets_info: hikeToSave.petsDescription,
-      reservation: hikeToSave.isReservationRequired,
-      fee: hikeToSave.doFeesApply,
-      fee_info: hikeToSave.feeDescription,
+      arepetspermitted: hikeToSave.arePetsPermitted,
+      petsdescription: hikeToSave.petsDescription,
+      isreservationrequired: hikeToSave.isReservationRequired,
+      dofeesapply: hikeToSave.doFeesApply,
+      feedescription: hikeToSave.feeDescription,
       age: hikeToSave.age,
       image: hikeToSave.images[0].url,
     };
@@ -66,26 +71,55 @@ function SingleHike({
       if (res.data.length > 0) {
         setClickedSaved(true);
         setSavedHikes([...savedHikes, res.data[0]]);
+        setSaveOrRemove("Remove");
       }
     } catch (error) {
       console.log("ERROR SAVING HIKE: ", error);
     }
+    // } else {
+    //   removeHike(hikeToSave);
+    // }
   };
 
   const removeHike = (hikeToremove) => {
     // setClickedSaved(!clickedSaved);
+    let idToRemove = hikeToremove.hike_id || hikeToremove.id;
     axios
-      .delete(`/saved-hikes?user_id=${user.id}&hike_id=${hikeToremove.hike_id}`)
+      .delete(`/saved-hikes?user_id=${user.id}&hike_id=${idToRemove}`)
       .then((res) => {
         console.log("POST RES: ", res.data);
         setSavedHikes(res.data);
+        console.log("REMOVED!!!!!!");
+        setSaveOrRemove("Save");
       })
       .catch((error) => {
         console.log("ERROR REMOVING HIKE: ", error);
       });
   };
+  const handleClickButton = (oneHike) => {
+    if (saveOrRemove === "Save") {
+      saveHike(oneHike);
+    } else if (saveOrRemove === "Remove") {
+      removeHike(oneHike);
+    }
+  };
   // console.log("clicked save: ", clickedSaved);
   // console.log("HIKE: ", hike);
+  useEffect(() => {
+    if (save) {
+      // console.log(hike);
+      for (let obj of savedHikes) {
+        // console.log("OBJ.ID", obj.hike_id);
+        // console.log("HIKE.ID", hike.id);
+
+        if (obj.hike_id === hike.id) {
+          // console.log("ALREADY SAVED!!!!!!!");
+          setSaveOrRemove("Remove");
+        }
+      }
+    }
+  }, [savedHikes]);
+
   return (
     <div>
       {/* <Link to="/details"> */}
@@ -97,8 +131,10 @@ function SingleHike({
         <div>{hike.id}</div>
       </div>
       {save ? (
-        <button onClick={() => saveHike(hike)} disabled={clickedSaved}>
-          Save
+        <button
+          onClick={() => handleClickButton(hike)} /*disabled={clickedSaved}*/
+        >
+          {saveOrRemove}
         </button>
       ) : null}
       {/* {!isSaved ? (
@@ -109,6 +145,7 @@ function SingleHike({
         <button onClick={() => removeHike(hike)}>Remove</button>
       )} */}
 
+      {/* line below is ok, only runs from Saved page, no need to modify */}
       {remove ? <button onClick={() => removeHike(hike)}>Remove</button> : null}
       {clickedModal === true ? (
         <Modal
@@ -117,7 +154,13 @@ function SingleHike({
           ariaHideApp={false}
           onRequestClose={closeModal}
         >
-          <HikeDetails closeModal={closeModal} hike={hike} />
+          <HikeDetails
+            closeModal={closeModal}
+            hike={hike}
+            parkSource={parkSource}
+            onSavedPage={onSavedPage}
+            // stateSource={stateSource}
+          />
           {/* <div>{hike.duration}</div> <button onClick={closeModal}>close</button> */}
         </Modal>
       ) : null}
