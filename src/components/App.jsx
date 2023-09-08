@@ -34,6 +34,8 @@ const App = () => {
       if (res.data.user_id) {
         // console.log("SESSION -client res.data.user_id: ", res.data.user_id);
         setUser({ username: res.data.username, id: res.data.user_id });
+      } else {
+        localStorage.clear();
       }
     });
   }, [user.id]);

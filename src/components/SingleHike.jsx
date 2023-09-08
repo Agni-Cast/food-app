@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import HikeDetails from "./HikeDetails.jsx";
 import Modal from "react-modal";
 import axios from "axios";
+import { FaRegHeart, FaHeart } from "react-icons/fa6";
 
 function SingleHike({
   /*hikesResult,*/
@@ -24,7 +25,7 @@ function SingleHike({
   const [clickedModal, setClickedModal] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [clickedSaved, setClickedSaved] = useState(false);
-  const [saveOrRemove, setSaveOrRemove] = useState("Save");
+  const [saveOrRemove, setSaveOrRemove] = useState(<FaRegHeart />);
   // const [isSaved, setIsSaved] = useState(false);
   const [imageSource, setImageSource] = useState(
     hike.image || `${hike.images[0].url}`
@@ -35,6 +36,9 @@ function SingleHike({
   // const [stateSource, setStateSource] = useState(
   //   hike.state || hike.relatedParks[0].state
   // );
+  const [icon, setIcon] = useState(<FaRegHeart />);
+  const [emptyHeart, setEmptyHeart] = useState(true);
+
   const navigate = useNavigate();
 
   const handleClick = (event) => {
@@ -71,7 +75,8 @@ function SingleHike({
       if (res.data.length > 0) {
         setClickedSaved(true);
         setSavedHikes([...savedHikes, res.data[0]]);
-        setSaveOrRemove("Remove");
+        setSaveOrRemove(<FaHeart />);
+        setEmptyHeart(false);
       }
     } catch (error) {
       console.log("ERROR SAVING HIKE: ", error);
@@ -90,16 +95,17 @@ function SingleHike({
         console.log("POST RES: ", res.data);
         setSavedHikes(res.data);
         console.log("REMOVED!!!!!!");
-        setSaveOrRemove("Save");
+        setSaveOrRemove(<FaRegHeart />);
+        setEmptyHeart(true);
       })
       .catch((error) => {
         console.log("ERROR REMOVING HIKE: ", error);
       });
   };
   const handleClickButton = (oneHike) => {
-    if (saveOrRemove === "Save") {
+    if (emptyHeart === true) {
       saveHike(oneHike);
-    } else if (saveOrRemove === "Remove") {
+    } else if (emptyHeart === false) {
       removeHike(oneHike);
     }
   };
@@ -114,7 +120,7 @@ function SingleHike({
 
         if (obj.hike_id === hike.id) {
           // console.log("ALREADY SAVED!!!!!!!");
-          setSaveOrRemove("Remove");
+          setSaveOrRemove(<FaHeart />);
         }
       }
     }
@@ -146,7 +152,11 @@ function SingleHike({
       )} */}
 
       {/* line below is ok, only runs from Saved page, no need to modify */}
-      {remove ? <button onClick={() => removeHike(hike)}>Remove</button> : null}
+      {remove ? (
+        <button onClick={() => removeHike(hike)}>
+          <FaHeart />
+        </button>
+      ) : null}
       {clickedModal === true ? (
         <Modal
           className="modal"

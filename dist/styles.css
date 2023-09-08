@@ -2,3 +2,8 @@
   height: 300px;
   width: 300px;
 } */
+.header {
+  /* display: inline-block; */
+  /* position: fixed; */
+  font-family: Helvetica;
+}

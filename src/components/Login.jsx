@@ -18,13 +18,14 @@ function Login({ user, setUser }) {
     setPassword(event.target.value);
   };
 
-  useEffect(() => {
-    if (user.id) {
-      navigate("/");
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user.id) {
+  //     navigate("/");
+  //   }
+  // }, [user]);
 
   const handleSubmit = async () => {
+    // event.preventDefault();
     try {
       console.log("USERNAME: ", username);
       if (
@@ -37,17 +38,24 @@ function Login({ user, setUser }) {
           username: username,
           password: password,
         });
-        if (res.data === "NO USER") {
+        if (res.data === "NO USER" || res.data === "INCORRECT PASSWORD") {
           setInputError(true);
+          // setErrorMessage("Incorrect Username or Password");
         } else {
           setInputError(false);
+          // setErrorMessage("");
         }
       }
     } catch (error) {
       console.log(error);
     }
   };
-
+  useEffect(() => {
+    if (user.id) {
+      navigate("/");
+    }
+  }, [user]);
+  // console.log("ERROR MESSAGE: ", errorMessage);
   // console.log("Login: ", username, password);
 
   return (
@@ -62,12 +70,14 @@ function Login({ user, setUser }) {
           onChange={handlePasswordChange}
           placeholder="Password"
           value={password}
+          type="password"
         ></input>
         <button type="submit" onClick={handleSubmit}>
           Login
         </button>
+        <div>{inputError ? <div>{errorMessage}</div> : null}</div>
       </form>
-      {/* <div>{inputError ? <div>{errorMessage}</div> : null}</div> */}
+      {/* <div>{errorMessage}</div> */}
       <div>
         <div>Don't have an account?</div>
         <Link to="/signup">Sign up</Link>

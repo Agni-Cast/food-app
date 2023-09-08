@@ -34,6 +34,10 @@ app.use(
     resave: true,
     unset: "destroy",
     saveUninitialized: true,
+
+    // not working!
+    // rolling: true,
+    // cookie: { maxAge: 60000 },
   })
 );
 
@@ -59,14 +63,6 @@ app.post("/login", async (req, res) => {
       res.send("NO USER");
     } else {
       let user = dbQuery.rows[0];
-      // console.log("LOGIN");
-      // console.log(
-      //   "req.body.password: ",
-      //   req.body.password,
-      //   "user.password: ",
-      //   user.password
-      // );
-      // console.log(typeof req.body.password, typeof user.password);
       valid = await bcrypt.compare(req.body.password, user.password);
       // console.log("valid: ", valid);
       if (valid === true) {
@@ -74,6 +70,8 @@ app.post("/login", async (req, res) => {
         req.session.username = req.body.username;
         req.session.user_id = dbQuery.rows[0].user_id;
         res.send(dbQuery.rows[0]);
+      } else {
+        res.send("INCORRECT PASSWORD");
       }
     }
   } catch (error) {

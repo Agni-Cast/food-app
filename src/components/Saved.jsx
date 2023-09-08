@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import SingleHike from "./SingleHike.jsx";
+// import { FaHeart } from "react-icons/fa6";
 
 function Saved({ user, savedHikes, setSavedHikes }) {
   const [remove, setRemove] = useState(true);
