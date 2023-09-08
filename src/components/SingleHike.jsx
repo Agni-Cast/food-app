@@ -30,6 +30,7 @@ function SingleHike({
   const [imageSource, setImageSource] = useState(
     hike.image || `${hike.images[0].url}`
   );
+  // console.log("IMAGE SOURCE: ", imageSource);
   const [parkSource, setParkSource] = useState(
     hike.park || hike.relatedParks[0].fullName
   );
@@ -56,7 +57,7 @@ function SingleHike({
       user_id: user.id,
       hike_id: hikeToSave.id,
       title: hikeToSave.title,
-      parksource: searchInput /*hikeToSave.relatedParks[0].states*/,
+      parksource: parkSource /*hikeToSave.relatedParks[0].states*/,
       park: hikeToSave.relatedParks[0].fullName,
       shortdescription: hikeToSave.shortDescription,
       longdescription: hikeToSave.longDescription,
@@ -125,7 +126,7 @@ function SingleHike({
       }
     }
   }, [savedHikes]);
-
+  // console.log("HIKE!!!!!!!", hike);
   return (
     <div>
       {/* <Link to="/details"> */}

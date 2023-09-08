@@ -12,7 +12,10 @@ function Home({ user, savedHikes, setSavedHikes }) {
   //passed to singleHikes to tell the components that the hikes variable was obtained from the home page (from api response)
   const [save, setSave] = useState(true);
   // hikes to be shown when filter is applied
-  const [hikesShown, setHikesShown] = useState([]);
+  const [hikesShown, setHikesShown] = useState(hikesResult);
+  useEffect(() => {
+    setHikesShown(hikesResult);
+  }, [hikesResult]);
   const [sortBy, setSortBy] = useState("park");
   // const [parkNameCat, setParkNameCat] = useState(
   //   hikesResult[0].relatedParks[0].fullName || ""
@@ -70,7 +73,8 @@ function Home({ user, savedHikes, setSavedHikes }) {
   // console.log("SORT BY: ", sortBy);
   // console.log(JSON.stringify([{id:'123', activities: [{idact: '234'}]}, {id:'1234', activities: [{idact: '2345'}]}]))
   //  '[{"id":"123","activities":[{"idact":"234"}]},{"id":"1234","activities":[{"idact":"2345"}]}]'
-
+  console.log("HIKES RESULT: ", hikesResult);
+  console.log("HIKES SHOWN: ", hikesShown);
   return (
     <div>
       <div className="header">
@@ -94,8 +98,16 @@ function Home({ user, savedHikes, setSavedHikes }) {
                 : hikesResult[0].relatedParks[0].states}
             </div>
           ) : null}
+          {/* {hikesShown.length > 0 ? (
+            <div>
+              {hikesShown.length} hikes in
+              {searchInput.length > 0
+                ? searchInput
+                : hikesResult[0].relatedParks[0].states}
+            </div>
+          ) : null} */}
         </div>
-        <Filter hikesResult={hikesResult} />
+        <Filter hikesResult={hikesResult} setHikesShown={setHikesShown} />
         {/* Filter by:
         <select>
           <option value="park">Park</option>
@@ -103,8 +115,8 @@ function Home({ user, savedHikes, setSavedHikes }) {
         </select> */}
       </div>
       <div>
-        {hikesResult.length > 0
-          ? hikesResult.map((singleHike, index) => {
+        {hikesShown.length > 0
+          ? hikesShown.map((singleHike, index) => {
               return (
                 <div key={singleHike.id}>
                   <SingleHike

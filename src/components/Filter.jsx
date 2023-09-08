@@ -1,10 +1,20 @@
-function Filter({ hikeResult }) {
+function Filter({ hikesResult, setHikesShown }) {
+  console.log("HIKES RESULT FILTER: ", hikesResult);
+  const handleFilterBy = (event) => {
+    if (event.target.value === "pets") {
+      setHikesShown(
+        hikesResult.filter((hike) => {
+          return hike.arePetsPermitted === "true";
+        })
+      );
+    }
+  };
   return (
     <div>
       Filter by:
-      <select>
+      <select onChange={handleFilterBy}>
         <option value="park">Park</option>
-        <option value="duration"> Duration</option>
+        <option value="pets"> Pets</option>
       </select>
     </div>
   );
