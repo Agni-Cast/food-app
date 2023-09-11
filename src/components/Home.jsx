@@ -6,6 +6,7 @@ import Filter from "./Filter.jsx";
 
 function Home({ user, savedHikes, setSavedHikes }) {
   const [searchInput, setSearchInput] = useState("");
+  const [stateSource, setStateSource] = useState("");
   const [hikesResult, setHikeResult] = useState(
     JSON.parse(localStorage.getItem("hikesResult")) || []
   );
@@ -17,6 +18,7 @@ function Home({ user, savedHikes, setSavedHikes }) {
     setHikesShown(hikesResult);
   }, [hikesResult]);
   const [sortBy, setSortBy] = useState("park");
+
   // const [parkNameCat, setParkNameCat] = useState(
   //   hikesResult[0].relatedParks[0].fullName || ""
   // );
@@ -38,6 +40,7 @@ function Home({ user, savedHikes, setSavedHikes }) {
   // send get request based on state searched for and sets the hikesResult array to the response data from the api
   const handleSubmit = async () => {
     if (searchInput !== "" && searchInput !== undefined) {
+      setStateSource(searchInput);
       const res = await axios.get(`/thingstodo?stateCode=${searchInput}`);
       // setHikeResult(res.data.data);
       setHikeResult(
@@ -69,12 +72,13 @@ function Home({ user, savedHikes, setSavedHikes }) {
     }
   }, []);
 
-  console.log("STATE: ", searchInput);
+  console.log("SearchInput: ", searchInput);
+  console.log("StateSource: ", stateSource);
   // console.log("SORT BY: ", sortBy);
   // console.log(JSON.stringify([{id:'123', activities: [{idact: '234'}]}, {id:'1234', activities: [{idact: '2345'}]}]))
   //  '[{"id":"123","activities":[{"idact":"234"}]},{"id":"1234","activities":[{"idact":"2345"}]}]'
-  console.log("HIKES RESULT: ", hikesResult);
-  console.log("HIKES SHOWN: ", hikesShown);
+  // console.log("HIKES RESULT: ", hikesResult);
+  // console.log("HIKES SHOWN: ", hikesShown);
   return (
     <div>
       <div className="header">
@@ -93,8 +97,8 @@ function Home({ user, savedHikes, setSavedHikes }) {
           {hikesResult.length > 0 ? (
             <div>
               {hikesResult.length} hikes in
-              {searchInput.length > 0
-                ? searchInput
+              {stateSource.length > 0
+                ? stateSource
                 : hikesResult[0].relatedParks[0].states}
             </div>
           ) : null}

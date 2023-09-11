@@ -24,8 +24,10 @@ function SingleHike({
 }) {
   const [clickedModal, setClickedModal] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [clickedSaved, setClickedSaved] = useState(false);
+  // const [clickedSaved, setClickedSaved] = useState(false);
   const [saveOrRemove, setSaveOrRemove] = useState(<FaRegHeart />);
+  // const [icon, setIcon] = useState(<FaRegHeart />);
+  const [emptyHeart, setEmptyHeart] = useState(true);
   // const [isSaved, setIsSaved] = useState(false);
   const [imageSource, setImageSource] = useState(
     hike.image || `${hike.images[0].url}`
@@ -37,8 +39,6 @@ function SingleHike({
   // const [stateSource, setStateSource] = useState(
   //   hike.state || hike.relatedParks[0].state
   // );
-  const [icon, setIcon] = useState(<FaRegHeart />);
-  const [emptyHeart, setEmptyHeart] = useState(true);
 
   const navigate = useNavigate();
 
@@ -74,7 +74,7 @@ function SingleHike({
       const res = await axios.post("/saved-hikes", data);
       // console.log(res.data);
       if (res.data.length > 0) {
-        setClickedSaved(true);
+        // setClickedSaved(true);
         setSavedHikes([...savedHikes, res.data[0]]);
         setSaveOrRemove(<FaHeart />);
         setEmptyHeart(false);
@@ -122,6 +122,7 @@ function SingleHike({
         if (obj.hike_id === hike.id) {
           // console.log("ALREADY SAVED!!!!!!!");
           setSaveOrRemove(<FaHeart />);
+          setEmptyHeart(false);
         }
       }
     }
