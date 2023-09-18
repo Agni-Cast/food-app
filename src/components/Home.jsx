@@ -13,10 +13,33 @@ function Home({ user, savedHikes, setSavedHikes }) {
   //passed to singleHikes to tell the components that the hikes variable was obtained from the home page (from api response)
   const [save, setSave] = useState(true);
   // hikes to be shown when filter is applied
-  const [hikesShown, setHikesShown] = useState(hikesResult);
-  useEffect(() => {
-    setHikesShown(hikesResult);
-  }, [hikesResult]);
+  const [hikesShown, setHikesShown] = useState(
+    // JSON.parse(localStorage.getItem("hikesShown")) ||
+    hikesResult
+  );
+
+  //////////////////////////////////////////////////////////////////////////
+  // TEST //
+
+  // useEffect(() => {
+  //   localStorage.setItem("hikesShown", JSON.stringify(hikesShown));
+  // }, [hikesShown]);
+
+  // gets what is in localStorage
+  // useEffect(() => {
+  //   const data = JSON.parse(localStorage.getItem("hikesShown"));
+  //   if (data) {
+  //     setHikesShown(data);
+  //   }
+  // }, []);
+  //////////////////////////////////////////////////////////////////////////
+
+  // useEffect(() => {
+  //   // console.log("HELLOOOOOOOOO");
+  //   setHikesShown(hikesResult);
+  // }, [hikesResult]);
+
+  const [filterApplied, setFilterApplied] = useState(false);
   const [sortBy, setSortBy] = useState("park");
 
   // const [parkNameCat, setParkNameCat] = useState(
@@ -49,6 +72,7 @@ function Home({ user, savedHikes, setSavedHikes }) {
           a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
         )
       );
+      // setHikesShown(hikesResult);
     }
   };
 
@@ -72,8 +96,13 @@ function Home({ user, savedHikes, setSavedHikes }) {
     }
   }, []);
 
-  console.log("SearchInput: ", searchInput);
-  console.log("StateSource: ", stateSource);
+  useEffect(() => {
+    // console.log("HELLOOOOOOOOO");
+    setHikesShown(hikesResult);
+  }, [hikesResult]);
+
+  // console.log("SearchInput: ", searchInput);
+  // console.log("StateSource: ", stateSource);
   // console.log("SORT BY: ", sortBy);
   // console.log(JSON.stringify([{id:'123', activities: [{idact: '234'}]}, {id:'1234', activities: [{idact: '2345'}]}]))
   //  '[{"id":"123","activities":[{"idact":"234"}]},{"id":"1234","activities":[{"idact":"2345"}]}]'
@@ -94,9 +123,9 @@ function Home({ user, savedHikes, setSavedHikes }) {
         </button>
         <div>
           {/* only works when a state has already been searched, doesn't work at login */}
-          {hikesResult.length > 0 ? (
+          {hikesShown.length > 0 ? (
             <div>
-              {hikesResult.length} hikes in
+              {hikesShown.length} hikes in
               {stateSource.length > 0
                 ? stateSource
                 : hikesResult[0].relatedParks[0].states}
@@ -111,7 +140,13 @@ function Home({ user, savedHikes, setSavedHikes }) {
             </div>
           ) : null} */}
         </div>
-        <Filter hikesResult={hikesResult} setHikesShown={setHikesShown} />
+        <Filter
+          hikesResult={hikesResult}
+          hikesShown={hikesShown}
+          setHikesShown={setHikesShown}
+          filterApplied={filterApplied}
+          setFilterApplied={setFilterApplied}
+        />
         {/* Filter by:
         <select>
           <option value="park">Park</option>
