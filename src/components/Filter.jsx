@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import Modal from "react-modal";
+import FilterButtons from "./FilterButtons.jsx";
 
 function Filter({
   hikesResult,
@@ -8,16 +9,45 @@ function Filter({
   filterApplied,
   setFilterApplied,
 }) {
-  //   console.log("HIKES RESULT FILTER: ", hikesResult);
   const [clickedModal, setClickedModal] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [filters, setFilters] = useState(
     // JSON.parse(localStorage.getItem("filters")) ||
     []
-    // {}
   );
-  // const [filtersKeys, setFiltersKeys] = useState([]);
-  //   const [clickedFilter, setClickedFilter] = useState(false);
+  const [allFilters, setAllFilters] = useState(["Pets Allowed", "No Fees"]);
+
+  /////////////////////////////////////////////////////
+  const [filtersObj, setFiltersObj] = useState({});
+  const [filterOn, setFilterOn] = useState(false);
+
+  // const handleButtonColor = () => {
+  //   if (filterOn) {
+  //     return 'Blue'
+  //   }
+  // }
+  const createFiltersObj = () => {
+    setFiltersObj(
+      Object.assign(filtersObj, {
+        pets: hikesResult.filter((hike) => {
+          return hike.arePetsPermitted === "false";
+        }),
+      })
+    );
+    setFiltersObj(
+      Object.assign(filtersObj, {
+        fees: hikesResult.filter((hike) => {
+          return hike.doFeesApply === "true";
+        }),
+      })
+    );
+  };
+
+  useEffect(() => {
+    createFiltersObj();
+  }, [hikesResult]);
+  // console.log("FILTERS OBJ: ", filtersObj);
+  /////////////////////////////////////////////////////
 
   const handleClickModal = () => {
     setClickedModal(true);
@@ -28,103 +58,101 @@ function Filter({
     setModalOpen(false);
   };
 
-  const handleFilterBy = (event) => {
-    if (event.target.value === "Pets") {
-      setHikesShown(
-        hikesShown.filter((hike) => {
-          return hike["arePetsPermitted"] === "true";
-        })
-      );
+  // const handleFilterBy = (value) => {
+  //   for (let filt of filters) {
+  //     if (value === "Pets Allowed") {
+  //       setHikesShown(
+  //         hikesShown.filter((hike) => {
+  //           return hike["arePetsPermitted"] === "true";
+  //         })
+  //       );
+  //       // setFilterApplied(true);
+  //       // setFilters([...filters, "Pets Allowed"]);
+  //     }
+  //     if (value === "No Fees") {
+  //       setHikesShown(
+  //         hikesShown.filter((hike) => {
+  //           return hike.doFeesApply === "false";
+  //         })
+  //       );
+  //       // setFilterApplied(true);
+  //       // setFilters([...filters, "No Fees"]);
+  //     }
+  //   }
+  // };
+  const handleFilterBy = () => {
+    for (let filt of filters) {
+      if (filt === "Pets Allowed") {
+        setHikesShown(
+          hikesShown.filter((hike) => {
+            return hike["arePetsPermitted"] === "true";
+          })
+        );
+      }
+      if (filt === "No Fees") {
+        setHikesShown(
+          hikesShown.filter((hike) => {
+            return hike.doFeesApply === "false";
+          })
+        );
+      }
+    }
+  };
+  const handleSetFilters = (value) => {
+    if (value === "Pets Allowed") {
       setFilterApplied(true);
       setFilters([...filters, "Pets Allowed"]);
-      // setFilters(Object.assign(filters, { Pets: "arePetsPermitted" }));
-      // setFiltersKeys(Object.keys(filters));
     }
-    if (event.target.value === "No Fees") {
-      setHikesShown(
-        hikesShown.filter((hike) => {
-          return hike.doFeesApply === "false";
-        })
-      );
+    if (value === "No Fees") {
       setFilterApplied(true);
       setFilters([...filters, "No Fees"]);
-      // setFilters(Object.assign(filters, { "No Fees": "doFeesApply" }));
-      // setFiltersKeys(Object.keys(filters));
     }
-
-    // setFilters([...filters, event.target.value]);
-    return;
   };
 
   const removeAllFilters = () => {
     setHikesShown(hikesResult);
     setFilterApplied(false);
-    // localStorage.removeItem("filters");
     setFilters([]);
-    // setFilters({});
-    // setFiltersKeys([]);
   };
-  const removeFilter = (event) => {
-    let index = filters.indexOf(event.target.value);
-    // console.log("INDEX: ", index);
-    // console.log("FILTER BEFORE: ", filters);
-    // filters.splice(index, 1);
-    // setFilters(filters.splice(index, 1));
+
+  const removeFilter = (value) => {
+    let index = filters.indexOf(value);
     let newFilters = filters
       .slice(0, index)
       .concat(filters.slice(index + 1, filters.length));
     setFilters(newFilters);
-
-    // delete filters.oneFilter;
-    // setFilters(filters);
-    // setHikesShown(hikesResult.filter((hike) => {
-
-    // }))
     if (filters.length < 1) {
       setFilterApplied(false);
       setHikesShown(hikesResult);
     }
-    // setHikesShown();
-    // return;
-    // console.log("FILTER AFTER: ", filters);
+    if (value === "Pets Allowed") {
+      let newHikes = hikesShown.concat(filtersObj.pets);
+      setHikesShown(
+        newHikes.sort((a, b) =>
+          a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
+        )
+        // .sort((a, b) => (a.title > b.title ? 1 : -1))
+      );
+    }
+    if (value === "No Fees") {
+      let newHikes = hikesShown.concat(filtersObj.fees);
+      setHikesShown(
+        newHikes
+          .sort((a, b) =>
+            a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
+          )
+          .sort((a, b) => (a.title > b.title ? 1 : -1))
+      );
+    }
   };
+
+  useEffect(() => {}, [hikesShown]);
   useEffect(() => {
-    // console.log("-------->", Object.keys(filters));
-    // setFiltersKeys(Object.keys(filters));
-    // let keys = [];
-    // console.log("FFFFFFFFFFF: ", filters);
-    // for (let key in filters) {
-    //   console.log("KEY: ", key);
-    //   keys.push(key);
-    // }
-    // setFiltersKeys(["Pets"]);
+    handleFilterBy();
   }, [filters]);
 
-  //////////////////////////////////////////////////////////////////////////
-  // TEST //
-  //   useEffect(() => {
-  //     localStorage.setItem("filters", JSON.stringify(filters));
-  //   }, [filters]);
-
-  //   // gets what is in localStorage
-  //   useEffect(() => {
-  //     const data = JSON.parse(localStorage.getItem("filters"));
-  //     if (data) {
-  //       setFilters(data);
-  //     }
-  //   }, []);
-  //////////////////////////////////////////////////////////////////////////
-  // const showFilters = (filters) => {
-  //   for (let oneFilter in filters) {
-  //     return (
-  //       <button onClick={removeFilter(oneFilter)} value={oneFilter}>
-  //         x {oneFilter}
-  //       </button>
-  //     );
-  //   }
-  // };
   console.log("FILTER: ", filters);
-  // console.log("FILTER KEYS: ", filtersKeys);
+  console.log("HIKES SHOWN: ", hikesShown);
 
   return (
     <div>
@@ -136,24 +164,53 @@ function Filter({
           ariaHideApp={false}
         >
           Filter by:
-          <button onClick={handleFilterBy} value="No Fees">
+          {/* <button onClick={handleFilterBy} value="No Fees">
             No Fees
           </button>
           <button onClick={handleFilterBy} value="Pets">
             Pets
           </button>
-          <button onClick={closeModal}>Apply</button>
+          <button onClick={closeModal}>Apply</button> */}
+          {allFilters.map((filter, index) => {
+            return (
+              // <div>
+              //   <FilterButtons
+              //     filters={filter}
+              //     filter={filter}
+              //     handleFilterBy={handleFilterBy}
+              //     removeFilter={removeFilter}
+              //   />
+              // </div>
+              <button
+                key={index}
+                onClick={
+                  () => {
+                    handleSetFilters(event.target.value);
+                    // handleFilterBy();
+                  }
+                  // () => console.log("!!!!!", event.target.value)
+                }
+                value={filter}
+              >
+                {filter}
+              </button>
+            );
+          })}
+          <button onClick={closeModal}>Show results</button>
         </Modal>
       ) : null}
       <div>
         {filters.length > 0 ? (
-          // Object.keys(filters).length > 0 ?
           <div>
             <div>
-              {/* Filetrs applied: {showFilters(filters)} */}
               {filters.map((oneFilter, index) => {
                 return (
-                  <button onClick={removeFilter} key={index} value={oneFilter}>
+                  <button
+                    key={index}
+                    onClick={() => removeFilter(event.target.value)}
+                    key={index}
+                    value={oneFilter}
+                  >
                     x {oneFilter}
                   </button>
                 );

@@ -66,11 +66,16 @@ function Home({ user, savedHikes, setSavedHikes }) {
       setStateSource(searchInput);
       const res = await axios.get(`/thingstodo?stateCode=${searchInput}`);
       // setHikeResult(res.data.data);
+      // res.data.data.sort((a, b) =>
+      //   // console.log("PARK: ", b.relatedParks[0].fullName)
+      //   a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
+      // );
       setHikeResult(
         res.data.data.sort((a, b) =>
           // console.log("PARK: ", b.relatedParks[0].fullName)
           a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
         )
+        // .sort((a, b) => (a.title > b.title ? 1 : -1))
       );
       // setHikesShown(hikesResult);
     }
