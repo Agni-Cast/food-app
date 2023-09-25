@@ -128,8 +128,12 @@ function Filter({
     if (value === "Pets Allowed") {
       let newHikes = hikesShown.concat(filtersObj.pets);
       setHikesShown(
-        newHikes.sort((a, b) =>
-          a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
+        newHikes.sort(
+          (a, b) =>
+            // a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
+            a.relatedParks[0].fullName.localeCompare(
+              b.relatedParks[0].fullName
+            ) || a.title.localeCompare(b.title)
         )
         // .sort((a, b) => (a.title > b.title ? 1 : -1))
       );
@@ -137,11 +141,14 @@ function Filter({
     if (value === "No Fees") {
       let newHikes = hikesShown.concat(filtersObj.fees);
       setHikesShown(
-        newHikes
-          .sort((a, b) =>
-            a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
-          )
-          .sort((a, b) => (a.title > b.title ? 1 : -1))
+        newHikes.sort(
+          (a, b) =>
+            // a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
+            a.relatedParks[0].fullName.localeCompare(
+              b.relatedParks[0].fullName
+            ) || a.title.localeCompare(b.title)
+        )
+        // .sort((a, b) => (a.title > b.title ? 1 : -1))
       );
     }
   };
@@ -151,8 +158,8 @@ function Filter({
     handleFilterBy();
   }, [filters]);
 
-  console.log("FILTER: ", filters);
-  console.log("HIKES SHOWN: ", hikesShown);
+  // console.log("FILTER: ", filters);
+  // console.log("HIKES SHOWN: ", hikesShown);
 
   return (
     <div>

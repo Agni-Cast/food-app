@@ -34,8 +34,9 @@ function SingleHike({
   );
   // console.log("IMAGE SOURCE: ", imageSource);
   const [parkSource, setParkSource] = useState(
-    hike.park || hike.relatedParks[0].fullName
+    hike.parkSource || hike.relatedParks[0].fullName
   );
+  // console.log("PARK SOURCE: ", parkSource);
   // const [stateSource, setStateSource] = useState(
   //   hike.state || hike.relatedParks[0].state
   // );
@@ -57,12 +58,13 @@ function SingleHike({
       user_id: user.id,
       hike_id: hikeToSave.id,
       title: hikeToSave.title,
-      parkSource: parkSource /*hikeToSave.relatedParks[0].states*/,
+      parkSource:
+        hike.relatedParks[0].fullName /*hikeToSave.relatedParks[0].states*/,
       park: hikeToSave.relatedParks[0].fullName,
       shortDescription: hikeToSave.shortDescription,
       longDescription: hikeToSave.longDescription,
       duration: hikeToSave.duration,
-      areDetspermitted: hikeToSave.arePetsPermitted,
+      arePetspermitted: hikeToSave.arePetsPermitted,
       petsDescription: hikeToSave.petsDescription,
       isReservationRequired: hikeToSave.isReservationRequired,
       doFeesApply: hikeToSave.doFeesApply,

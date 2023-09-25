@@ -71,9 +71,14 @@ function Home({ user, savedHikes, setSavedHikes }) {
       //   a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
       // );
       setHikeResult(
-        res.data.data.sort((a, b) =>
-          // console.log("PARK: ", b.relatedParks[0].fullName)
-          a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
+        res.data.data.sort(
+          (a, b) =>
+            // console.log("PARK: ", b.relatedParks[0].fullName)
+            // a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
+
+            a.relatedParks[0].fullName.localeCompare(
+              b.relatedParks[0].fullName
+            ) || a.title.localeCompare(b.title)
         )
         // .sort((a, b) => (a.title > b.title ? 1 : -1))
       );
