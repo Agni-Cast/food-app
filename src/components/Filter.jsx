@@ -3,24 +3,29 @@ import Modal from "react-modal";
 import FilterButtons from "./FilterButtons.jsx";
 
 function Filter({
+  clickedFilters,
   hikesResult,
   hikesShown,
   setHikesShown,
   filterApplied,
   setFilterApplied,
+  setClickedFilters,
+  filters,
+  setFilters,
 }) {
   const [clickedModal, setClickedModal] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  const [filters, setFilters] = useState(
-    // JSON.parse(localStorage.getItem("filters")) ||
-    []
-  );
+  // const [filters, setFilters] = useState(
+  //   // JSON.parse(localStorage.getItem("filters")) ||
+  //   []
+  // );
   const [allFilters, setAllFilters] = useState(["Pets Allowed", "No Fees"]);
 
   /////////////////////////////////////////////////////
   const [filtersObj, setFiltersObj] = useState({});
   const [filterOn, setFilterOn] = useState(false);
-
+  // const [clickedFilters, setClickedFilters] = useState([false, false]);
+  console.log("CLICKEDFILTERS ARR: ", clickedFilters);
   // const handleButtonColor = () => {
   //   if (filterOn) {
   //     return 'Blue'
@@ -47,6 +52,23 @@ function Filter({
     createFiltersObj();
   }, [hikesResult]);
   // console.log("FILTERS OBJ: ", filtersObj);
+
+  const handleClickeFilter = (index) => {
+    const newArr = clickedFilters.map((bool, i) => {
+      // console.log("BOOL: ", bool);
+      // console.log("INDEX: ", index);
+      // console.log("I : ", i);
+
+      if (i === index) {
+        console.log("inverse BOOL: ", !bool);
+        return !bool;
+      } else {
+        return bool;
+      }
+    });
+    // console.log("newArr: ", newArr);
+    setClickedFilters(newArr);
+  };
   /////////////////////////////////////////////////////
 
   const handleClickModal = () => {
@@ -113,6 +135,7 @@ function Filter({
     setHikesShown(hikesResult);
     setFilterApplied(false);
     setFilters([]);
+    setClickedFilters([false, false]);
   };
 
   const removeFilter = (value) => {
@@ -151,6 +174,8 @@ function Filter({
         // .sort((a, b) => (a.title > b.title ? 1 : -1))
       );
     }
+    const ind = allFilters.indexOf(value);
+    handleClickeFilter(ind);
   };
 
   useEffect(() => {}, [hikesShown]);
@@ -180,27 +205,32 @@ function Filter({
           <button onClick={closeModal}>Apply</button> */}
           {allFilters.map((filter, index) => {
             return (
-              // <div>
-              //   <FilterButtons
-              //     filters={filter}
-              //     filter={filter}
-              //     handleFilterBy={handleFilterBy}
-              //     removeFilter={removeFilter}
-              //   />
-              // </div>
-              <button
-                key={index}
-                onClick={
-                  () => {
-                    handleSetFilters(event.target.value);
-                    // handleFilterBy();
-                  }
-                  // () => console.log("!!!!!", event.target.value)
-                }
-                value={filter}
-              >
-                {filter}
-              </button>
+              <div>
+                <FilterButtons
+                  // filters={filter}
+                  filter={filter}
+                  // handleFilterBy={handleFilterBy}
+                  removeFilter={removeFilter}
+                  handleSetFilters={handleSetFilters}
+                  clickedFilters={clickedFilters}
+                  setClickedFilters={setClickedFilters}
+                  index={index}
+                  handleClickeFilter={handleClickeFilter}
+                />
+              </div>
+              // <button
+              //   key={index}
+              //   onClick={
+              //     () => {
+              //       handleSetFilters(event.target.value);
+              //       // handleFilterBy();
+              //     }
+              //     // () => console.log("!!!!!", event.target.value)
+              //   }
+              //   value={filter}
+              // >
+              //   {filter}
+              // </button>
             );
           })}
           <button onClick={closeModal}>Show results</button>

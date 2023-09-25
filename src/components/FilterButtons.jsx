@@ -1,8 +1,23 @@
 import { useState, useEffect } from "react";
 
-function FilterButtons({ handleFilterBy, filters, filter, removeFilter }) {
-  const [buttonColor, setButtonColor] = useState();
-  const [buttonClick, setButtonClick] = useState(true);
+function FilterButtons({
+  handleSetFilters,
+  // handleFilterBy,
+  filter,
+  removeFilter,
+  clickedFilters,
+  setClickedFilters,
+  index,
+  handleClickeFilter,
+}) {
+  const [buttonColor, setButtonColor] = useState(() => {
+    if (clickedFilters[index] === false) {
+      return "white";
+    } else {
+      return "red";
+    }
+  });
+  // const [buttonClick, setButtonClick] = useState(true);
   //   const handleColor = () => {
   //     if (filters.includes(filter)) {
   //       setButtonColor("red");
@@ -10,16 +25,33 @@ function FilterButtons({ handleFilterBy, filters, filter, removeFilter }) {
   //       setButtonColor("white");
   //     }
   //   };
-  //   useEffect(() => {
-  //     handleColor();
-  //   }, [filters]);
+  // const handleClickeFilter = (index) => {
+  //   const newArr = clickedFilters.map((bool, i) => {
+  //     console.log("BOOL: ", bool);
+  //     console.log("INDEX: ", index);
+  //     console.log("I : ", i);
+
+  //     if (i === index) {
+  //       console.log("inverse BOOL: ", !bool);
+  //       return !bool;
+  //     } else {
+  //       return bool;
+  //     }
+  //   });
+  //   console.log("newArr: ", newArr);
+  //   setClickedFilters(newArr);
+  // };
+
   return (
     <div>
       <button
         onClick={() => {
-          setButtonClick(!buttonClick);
-          buttonClick === true ? handleFilterBy(event) : removeFilter(event);
-          buttonColor === "white"
+          // setButtonClick(!buttonClick);
+          handleClickeFilter(index);
+          clickedFilters[index] === false
+            ? handleSetFilters(event.target.value)
+            : removeFilter(event.target.value);
+          clickedFilters[index] === false
             ? setButtonColor("red")
             : setButtonColor("white");
         }}

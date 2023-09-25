@@ -19,6 +19,12 @@ function Home({ user, savedHikes, setSavedHikes }) {
   );
 
   //////////////////////////////////////////////////////////////////////////
+  const [clickedFilters, setClickedFilters] = useState([false, false]);
+  const [filters, setFilters] = useState(
+    // JSON.parse(localStorage.getItem("filters")) ||
+    []
+  );
+
   // TEST //
 
   // useEffect(() => {
@@ -84,6 +90,8 @@ function Home({ user, savedHikes, setSavedHikes }) {
       );
       // setHikesShown(hikesResult);
     }
+    setFilters([]);
+    setClickedFilters([false, false]);
   };
 
   // allows to click on 'Enter' key to submit request
@@ -156,6 +164,10 @@ function Home({ user, savedHikes, setSavedHikes }) {
           setHikesShown={setHikesShown}
           filterApplied={filterApplied}
           setFilterApplied={setFilterApplied}
+          clickedFilters={clickedFilters}
+          setClickedFilters={setClickedFilters}
+          filters={filters}
+          setFilters={setFilters}
         />
         {/* Filter by:
         <select>
