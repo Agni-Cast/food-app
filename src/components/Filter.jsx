@@ -25,7 +25,7 @@ function Filter({
   const [filtersObj, setFiltersObj] = useState({});
   const [filterOn, setFilterOn] = useState(false);
   // const [clickedFilters, setClickedFilters] = useState([false, false]);
-  console.log("CLICKEDFILTERS ARR: ", clickedFilters);
+  // console.log("CLICKEDFILTERS ARR: ", clickedFilters);
   // const handleButtonColor = () => {
   //   if (filterOn) {
   //     return 'Blue'
@@ -207,6 +207,7 @@ function Filter({
             return (
               <div>
                 <FilterButtons
+                  key={index}
                   // filters={filter}
                   filter={filter}
                   // handleFilterBy={handleFilterBy}

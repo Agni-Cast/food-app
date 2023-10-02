@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS hikes (
 	hike_id VARCHAR(200),
 	"title" VARCHAR(200),
 	"parkSource" VARCHAR(200),
-	"park" VARCHAR(200),
+	"state" VARCHAR(200),
 	"shortDescription" VARCHAR(1000),
 	"longDescription" VARCHAR(10000),
 	"duration" VARCHAR(50),

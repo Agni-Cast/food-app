@@ -6,6 +6,8 @@ function HikeDetails({
   closeModal,
   parkSource,
   onSavedPage /*stateSource*/,
+  stateSource,
+  hikeState,
 }) {
   // console.log("HIKEs: ", hikesResult);
   // console.log("HIKE DETAILS: ", hike);
@@ -14,31 +16,17 @@ function HikeDetails({
   return (
     <div>
       <div>{hike.title}</div>
-      {/* <div>state: {stateSource}</div> */}
       {/* <div>park: {hike.relatedParks[0].fullName}</div> */}
       <div>park: {parkSource}</div>
-      <div>
-        summary: {onSavedPage ? hike.shortdescription : hike.shortDescription}
-      </div>
-      <div>
-        summary_long:{" "}
-        {onSavedPage ? hike.longdescription : hike.longDescription}
-      </div>
+      <div>state: {hikeState}</div>
+      <div>summary: {hike.shortDescription}</div>
+      <div>summary_long: {hike.longDescription}</div>
       <div>duration: {hike.duration}</div>
-      <div>
-        pets: {onSavedPage ? hike.arepetspermitted : hike.arePetsPermitted}
-      </div>
-      <div>
-        pets_info: {onSavedPage ? hike.petsdescription : hike.petsDescription}
-      </div>
-      <div>
-        reservation:{" "}
-        {onSavedPage ? hike.isreservationrequired : hike.isReservationRequired}
-      </div>
-      <div>fee: {onSavedPage ? hike.dofeesapply : hike.doFeesApply}</div>
-      <div>
-        fee_info: {onSavedPage ? hike.feedescription : hike.feeDescription}
-      </div>
+      <div>pets: {hike.arePetsPermitted}</div>
+      <div>pets_info: {hike.petsDescription}</div>
+      <div>reservation: {hike.isReservationRequired}</div>
+      <div>fee: {hike.doFeesApply}</div>
+      <div>fee_info: {hike.feeDescription}</div>
       <div> age: {hike.age}</div>
       <button onClick={closeModal}>close</button>
       {/* <div>{hike.duration}</div> <button onClick={closeModal}>close</button> */}

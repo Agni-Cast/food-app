@@ -16,12 +16,19 @@ function SingleHike({
   savedHikes,
   setSavedHikes,
   onSavedPage,
+  prevHike,
+  hikesShown,
+  stateSource,
+  // setStateSource,
+  // hikeState,
+  // setHikeState,
   // hikesSaved,
   // setHikesSaved,
   // isSaved,
   // setIsSaved,
   // isUser,
 }) {
+  // console.log("PREVIOUS HIKE: ", prevHike);
   const [clickedModal, setClickedModal] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   // const [clickedSaved, setClickedSaved] = useState(false);
@@ -36,6 +43,29 @@ function SingleHike({
   const [parkSource, setParkSource] = useState(
     hike.parkSource || hike.relatedParks[0].fullName
   );
+
+  const [hikeState, setHikeState] = useState(hike.state || stateSource);
+  // console.log("HikeState: ", hikeState);
+  // console.log("ParkSource: ", parkSource);
+  const [prevPark, setPrevPark] = useState(
+    ""
+    //   () => {
+    //   // if (prevHike) {
+    //   //   return prevHike.parkSource || prevHike.relatedParks[0].fullName;
+    //   // }
+    // }
+  );
+  const [prevState, setPrevState] = useState("");
+  // console.log("PREV PARK: ", prevPark);
+  // console.log("PREV STATE: ", prevState);
+  useEffect(() => {
+    if (prevHike && prevHike.parkSource) {
+      setPrevPark(prevHike.parkSource);
+      setPrevState(prevHike.state);
+    } else if (prevHike && prevHike.relatedParks[0].fullName) {
+      setPrevPark(prevHike.relatedParks[0].fullName);
+    }
+  }, [hikesShown]);
   // console.log("PARK SOURCE: ", parkSource);
   // const [stateSource, setStateSource] = useState(
   //   hike.state || hike.relatedParks[0].state
@@ -51,7 +81,7 @@ function SingleHike({
   const closeModal = () => {
     setModalOpen(false);
   };
-
+  // console.log("STATE: ", stateSource);
   const saveHike = async (hikeToSave) => {
     // if (saveOrRemove === "Save") {
     const data = {
@@ -60,11 +90,11 @@ function SingleHike({
       title: hikeToSave.title,
       parkSource:
         hike.relatedParks[0].fullName /*hikeToSave.relatedParks[0].states*/,
-      park: hikeToSave.relatedParks[0].fullName,
+      state: stateSource,
       shortDescription: hikeToSave.shortDescription,
       longDescription: hikeToSave.longDescription,
       duration: hikeToSave.duration,
-      arePetspermitted: hikeToSave.arePetsPermitted,
+      arePetsPermitted: hikeToSave.arePetsPermitted,
       petsDescription: hikeToSave.petsDescription,
       isReservationRequired: hikeToSave.isReservationRequired,
       doFeesApply: hikeToSave.doFeesApply,
@@ -129,10 +159,23 @@ function SingleHike({
       }
     }
   }, [savedHikes]);
+  useEffect(() => {}, [hikesShown]);
+  // useEffect(() => {
+  //   if (onSavedPage) {
+  //     setHikeState(hike.state);
+  //   }
+  // }, [onSavedPage]);
   // console.log("HIKE!!!!!!!", hike);
   return (
     <div>
       {/* <Link to="/details"> */}
+      <div style={{ fontSize: "35px" }}>
+        {/* {onSavedPage && hikeState !== prevPark ? prevState : null} */}
+        {onSavedPage && hikeState !== prevState ? hikeState : null}
+      </div>
+      <div style={{ fontSize: "30px" }}>
+        {parkSource !== prevPark ? parkSource : null}
+      </div>
       <div onClick={handleClick} style={{ padding: "10px" }}>
         <img style={{ hight: "300px", width: "300px" }} src={imageSource} />
         <div style={{ fontSize: "20px" }}>{hike.title}</div>
@@ -173,6 +216,8 @@ function SingleHike({
             hike={hike}
             parkSource={parkSource}
             onSavedPage={onSavedPage}
+            stateSource={stateSource}
+            hikeState={hikeState}
             // stateSource={stateSource}
           />
           {/* <div>{hike.duration}</div> <button onClick={closeModal}>close</button> */}

@@ -132,7 +132,7 @@ app.post("/saved-hikes", async (req, res) => {
       hike_id,
       title,
       "parkSource",
-      park,
+      state,
       "shortDescription",
       "longDescription",
       duration,
@@ -149,7 +149,7 @@ app.post("/saved-hikes", async (req, res) => {
         req.body.hike_id,
         req.body.title,
         req.body.parkSource,
-        req.body.park,
+        req.body.state,
         req.body.shortDescription,
         req.body.longDescription,
         req.body.duration,
@@ -173,9 +173,10 @@ app.post("/saved-hikes", async (req, res) => {
 
 app.get("/saved-hikes", async (req, res) => {
   // console.log(req.query);
-  const dbQuery = await db.query("SELECT * FROM hikes WHERE user_id=$1", [
-    req.query.user_id,
-  ]);
+  const dbQuery = await db.query(
+    "SELECT * FROM hikes WHERE user_id=$1 ORDER BY state ASC",
+    [req.query.user_id]
+  );
   // console.log(dbQuery.rows);
   if (dbQuery.rows.length > 0) {
     res.send(dbQuery.rows);

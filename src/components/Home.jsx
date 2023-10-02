@@ -4,9 +4,17 @@ import SingleHike from "./SingleHike.jsx";
 import HikeDetails from "./HikeDetails.jsx";
 import Filter from "./Filter.jsx";
 
-function Home({ user, savedHikes, setSavedHikes }) {
+function Home({
+  user,
+  savedHikes,
+  setSavedHikes,
+  stateSource,
+  setStateSource,
+}) {
   const [searchInput, setSearchInput] = useState("");
-  const [stateSource, setStateSource] = useState("");
+  // const [stateSource, setStateSource] = useState(
+  //   JSON.parse(localStorage.getItem("stateSource")) || ""
+  // );
   const [hikesResult, setHikeResult] = useState(
     JSON.parse(localStorage.getItem("hikesResult")) || []
   );
@@ -58,8 +66,8 @@ function Home({ user, savedHikes, setSavedHikes }) {
   //   }
   // };
 
-  console.log("USER HOME: ", user);
-  console.log("HIKES: ", hikesResult);
+  // console.log("USER HOME: ", user);
+  // console.log("HIKES: ", hikesResult);
 
   // sets the state to search for based on user inout
   const handleInputChange = (event) => {
@@ -69,7 +77,6 @@ function Home({ user, savedHikes, setSavedHikes }) {
   // send get request based on state searched for and sets the hikesResult array to the response data from the api
   const handleSubmit = async () => {
     if (searchInput !== "" && searchInput !== undefined) {
-      setStateSource(searchInput);
       const res = await axios.get(`/thingstodo?stateCode=${searchInput}`);
       // setHikeResult(res.data.data);
       // res.data.data.sort((a, b) =>
@@ -88,6 +95,8 @@ function Home({ user, savedHikes, setSavedHikes }) {
         )
         // .sort((a, b) => (a.title > b.title ? 1 : -1))
       );
+      setStateSource(searchInput);
+
       // setHikesShown(hikesResult);
     }
     setFilters([]);
@@ -104,6 +113,7 @@ function Home({ user, savedHikes, setSavedHikes }) {
   // saves the hikesResult array to localStorage
   useEffect(() => {
     localStorage.setItem("hikesResult", JSON.stringify(hikesResult));
+    localStorage.setItem("stateSource", JSON.stringify(stateSource));
   }, [hikesResult]);
 
   // gets what is in localStorage
@@ -112,8 +122,12 @@ function Home({ user, savedHikes, setSavedHikes }) {
     if (data) {
       setHikeResult(data);
     }
+    const dataState = JSON.parse(localStorage.getItem("stateSource"));
+    if (dataState) {
+      setStateSource(dataState);
+    }
   }, []);
-
+  // console.log("STATE HOME: ", stateSource);
   useEffect(() => {
     // console.log("HELLOOOOOOOOO");
     setHikesShown(hikesResult);
@@ -144,6 +158,7 @@ function Home({ user, savedHikes, setSavedHikes }) {
           {hikesShown.length > 0 ? (
             <div>
               {hikesShown.length} hikes in
+              {/* {searchInput} */}
               {stateSource.length > 0
                 ? stateSource
                 : hikesResult[0].relatedParks[0].states}
@@ -168,6 +183,7 @@ function Home({ user, savedHikes, setSavedHikes }) {
           setClickedFilters={setClickedFilters}
           filters={filters}
           setFilters={setFilters}
+          // stateSource={stateSource}
         />
         {/* Filter by:
         <select>
@@ -178,17 +194,24 @@ function Home({ user, savedHikes, setSavedHikes }) {
       <div>
         {hikesShown.length > 0
           ? hikesShown.map((singleHike, index) => {
+              // console.log(index);
+              // console.log(hikesShown[index - 1]);
+              // console.log(singleHike);
               return (
                 <div key={singleHike.id}>
                   <SingleHike
                     hike={singleHike}
                     index={index}
+                    prevHike={hikesShown[index - 1]}
                     hikesResult={hikesResult}
                     user={user}
                     searchInput={searchInput}
                     save={save}
                     savedHikes={savedHikes}
                     setSavedHikes={setSavedHikes}
+                    hikesShown={hikesShown}
+                    stateSource={stateSource}
+                    // setStateSource={setStateSource}
                     // hikesSaved={hikesSaved}
                     // setHikesSaved={setHikesSaved}
                     // isSaved={isSaved}

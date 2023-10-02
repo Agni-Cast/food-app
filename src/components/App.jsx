@@ -19,6 +19,9 @@ const App = () => {
   const navigate = useNavigate();
   const [user, setUser] = useState({});
   const [savedHikes, setSavedHikes] = useState([]);
+  const [stateSource, setStateSource] = useState(
+    JSON.parse(localStorage.getItem("stateSource")) || ""
+  );
 
   const handleLogOut = () => {
     axios.get("/logout").then((res) => {
@@ -48,10 +51,20 @@ const App = () => {
       axios.get(`/saved-hikes?user_id=${user.id}`).then((res) => {
         // console.log(res.data);
         setSavedHikes(res.data);
+        // setSavedHikes(
+        //   res.data.sort(
+        //     (a, b) =>
+        //       // console.log("PARK: ", b.relatedParks[0].fullName)
+        //       // a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
+
+        //       a.parkSource.localeCompare(b.parkSource) ||
+        //       a.title.localeCompare(b.title)
+        //   )
+        // );
       });
     }
   }, [user.id]);
-  console.log("SAVED HIKES: ", savedHikes);
+  // console.log("SAVED HIKES: ", savedHikes);
   ////////////////////////////////////////////////////
   return (
     // <BrowserRouter>
@@ -93,6 +106,8 @@ const App = () => {
               user={user}
               savedHikes={savedHikes}
               setSavedHikes={setSavedHikes}
+              stateSource={stateSource}
+              setStateSource={setStateSource}
             />
           }
         />
@@ -103,6 +118,8 @@ const App = () => {
               user={user}
               savedHikes={savedHikes}
               setSavedHikes={setSavedHikes}
+              stateSource={stateSource}
+              // setStateSource={setStateSource}
             />
           }
         />
