@@ -182,7 +182,7 @@ function Filter({
   useEffect(() => {
     handleFilterBy();
   }, [filters]);
-
+  // useEffect(() => {}, [savedHikes]);
   // console.log("FILTER: ", filters);
   // console.log("HIKES SHOWN: ", hikesShown);
 

@@ -45,7 +45,7 @@ const App = () => {
   // console.log("USER; ", user);
 
   ///////////////////////////////////////////////////
-  // console.log("SAVED Hikes: ", savedHikes);
+  console.log("SAVED Hikes: ", savedHikes);
   useEffect(() => {
     if (user.id) {
       axios.get(`/saved-hikes?user_id=${user.id}`).then((res) => {

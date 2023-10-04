@@ -12,59 +12,33 @@ function Home({
   setStateSource,
 }) {
   const [searchInput, setSearchInput] = useState("");
-  // const [stateSource, setStateSource] = useState(
-  //   JSON.parse(localStorage.getItem("stateSource")) || ""
-  // );
   const [hikesResult, setHikeResult] = useState(
     JSON.parse(localStorage.getItem("hikesResult")) || []
   );
+  const [hikesResultObj, setHikesResultObj] = useState(() => {
+    let obj = {};
+    for (let hike of hikesResult) {
+      let park = hike.relatedParks[0].fullName;
+      if (obj[park] === undefined) {
+        obj[park] = [hike];
+      } else {
+        obj[park].push(hike);
+      }
+    }
+    return obj;
+  });
+  // console.log("HIKES OBJ: ", hikesResultObj);
   //passed to singleHikes to tell the components that the hikes variable was obtained from the home page (from api response)
   const [save, setSave] = useState(true);
   // hikes to be shown when filter is applied
-  const [hikesShown, setHikesShown] = useState(
-    // JSON.parse(localStorage.getItem("hikesShown")) ||
-    hikesResult
-  );
-
-  //////////////////////////////////////////////////////////////////////////
+  const [hikesShown, setHikesShown] = useState(hikesResult);
   const [clickedFilters, setClickedFilters] = useState([false, false]);
   const [filters, setFilters] = useState(
     // JSON.parse(localStorage.getItem("filters")) ||
     []
   );
-
-  // TEST //
-
-  // useEffect(() => {
-  //   localStorage.setItem("hikesShown", JSON.stringify(hikesShown));
-  // }, [hikesShown]);
-
-  // gets what is in localStorage
-  // useEffect(() => {
-  //   const data = JSON.parse(localStorage.getItem("hikesShown"));
-  //   if (data) {
-  //     setHikesShown(data);
-  //   }
-  // }, []);
-  //////////////////////////////////////////////////////////////////////////
-
-  // useEffect(() => {
-  //   // console.log("HELLOOOOOOOOO");
-  //   setHikesShown(hikesResult);
-  // }, [hikesResult]);
-
   const [filterApplied, setFilterApplied] = useState(false);
   const [sortBy, setSortBy] = useState("park");
-
-  // const [parkNameCat, setParkNameCat] = useState(
-  //   hikesResult[0].relatedParks[0].fullName || ""
-  // );
-
-  // const handleFilterBy = (event) => {
-  //   if (event.target.value === "park") {
-  //     setHikesShown([hikesResult.filter]);
-  //   }
-  // };
 
   // console.log("USER HOME: ", user);
   // console.log("HIKES: ", hikesResult);
@@ -96,8 +70,6 @@ function Home({
         // .sort((a, b) => (a.title > b.title ? 1 : -1))
       );
       setStateSource(searchInput);
-
-      // setHikesShown(hikesResult);
     }
     setFilters([]);
     setClickedFilters([false, false]);
@@ -129,7 +101,6 @@ function Home({
   }, []);
   // console.log("STATE HOME: ", stateSource);
   useEffect(() => {
-    // console.log("HELLOOOOOOOOO");
     setHikesShown(hikesResult);
   }, [hikesResult]);
 

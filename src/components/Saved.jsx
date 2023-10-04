@@ -14,9 +14,18 @@ function Saved({
   const [remove, setRemove] = useState(true);
   const [onSavedPage, setOnSavedPage] = useState(true);
   // const [hikeState, setHikeState] = useState("");
-  // useEffect(() => {}, [savedHikes]);
+  // useEffect(() => {
+  //   setSavedHikes(
+  //     savedHikes.sort(
+  //       (a, b) =>
+  //         a.state.localeCompare(b.state) ||
+  //         a.parkSource.localeCompare(b.parkSource) ||
+  //         a.title.localeCompare(b.title)
+  //     )
+  //   );
+  // }, [savedHikes]);
 
-  console.log("SAVED HIKES: ", savedHikes);
+  // console.log("SAVED HIKES: ", savedHikes);
   // console.log("ONSAVED: ", onSavedPage);
   return (
     <div>
@@ -25,6 +34,23 @@ function Saved({
         ? savedHikes.map((hike, index) => {
             return (
               <div key={hike.id}>
+                <div style={{ fontSize: "35px" }}>
+                  {index === 0 ? hike.state : null}
+                </div>
+                <div style={{ fontSize: "35px" }}>
+                  {index > 0 && hike.state !== savedHikes[index - 1].state
+                    ? hike.state
+                    : null}
+                </div>
+                <div style={{ fontSize: "30px" }}>
+                  {index === 0 ? hike.parkSource : null}
+                </div>
+                <div style={{ fontSize: "30px" }}>
+                  {index > 0 &&
+                  hike.parkSource !== savedHikes[index - 1].parkSource
+                    ? hike.parkSource
+                    : null}
+                </div>
                 <SingleHike
                   hike={hike}
                   prevHike={savedHikes[index - 1]}

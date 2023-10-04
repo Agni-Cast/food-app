@@ -55,13 +55,13 @@ function SingleHike({
     //   // }
     // }
   );
-  const [prevState, setPrevState] = useState("");
+  // const [prevState, setPrevState] = useState("");
   // console.log("PREV PARK: ", prevPark);
   // console.log("PREV STATE: ", prevState);
   useEffect(() => {
     if (prevHike && prevHike.parkSource) {
       setPrevPark(prevHike.parkSource);
-      setPrevState(prevHike.state);
+      // setPrevState(prevHike.state);
     } else if (prevHike && prevHike.relatedParks[0].fullName) {
       setPrevPark(prevHike.relatedParks[0].fullName);
     }
@@ -107,7 +107,14 @@ function SingleHike({
       // console.log(res.data);
       if (res.data.length > 0) {
         // setClickedSaved(true);
-        setSavedHikes([...savedHikes, res.data[0]]);
+        setSavedHikes(
+          [...savedHikes, res.data[0]].sort(
+            (a, b) =>
+              a.state.localeCompare(b.state) ||
+              a.parkSource.localeCompare(b.parkSource) ||
+              a.title.localeCompare(b.title)
+          )
+        );
         setSaveOrRemove(<FaHeart />);
         setEmptyHeart(false);
       }
@@ -126,7 +133,14 @@ function SingleHike({
       .delete(`/saved-hikes?user_id=${user.id}&hike_id=${idToRemove}`)
       .then((res) => {
         console.log("POST RES: ", res.data);
-        setSavedHikes(res.data);
+        setSavedHikes(
+          res.data.sort(
+            (a, b) =>
+              a.state.localeCompare(b.state) ||
+              a.parkSource.localeCompare(b.parkSource) ||
+              a.title.localeCompare(b.title)
+          )
+        );
         console.log("REMOVED!!!!!!");
         setSaveOrRemove(<FaRegHeart />);
         setEmptyHeart(true);
@@ -160,6 +174,7 @@ function SingleHike({
     }
   }, [savedHikes]);
   useEffect(() => {}, [hikesShown]);
+  useEffect(() => {}, [savedHikes]);
   // useEffect(() => {
   //   if (onSavedPage) {
   //     setHikeState(hike.state);
@@ -171,10 +186,10 @@ function SingleHike({
       {/* <Link to="/details"> */}
       <div style={{ fontSize: "35px" }}>
         {/* {onSavedPage && hikeState !== prevPark ? prevState : null} */}
-        {onSavedPage && hikeState !== prevState ? hikeState : null}
+        {/* {onSavedPage && hikeState !== prevState ? hikeState : null} */}
       </div>
       <div style={{ fontSize: "30px" }}>
-        {parkSource !== prevPark ? parkSource : null}
+        {!onSavedPage && parkSource !== prevPark ? parkSource : null}
       </div>
       <div onClick={handleClick} style={{ padding: "10px" }}>
         <img style={{ hight: "300px", width: "300px" }} src={imageSource} />
