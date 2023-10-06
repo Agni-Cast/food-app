@@ -183,15 +183,15 @@ app.get("/saved-hikes", async (req, res) => {
   }
 });
 
-app.get("/check-saved-hike", async (req, res) => {
-  const dbQuery = await db.query(
-    `SELECT * FROM hikes WHERE user_id=$1 AND hike_id=$2`,
-    [req.query.user_id, req.query.hike_id]
-  );
-  if (dbQuery.rows.length > 0) {
-    res.send("HIKE SAVED");
-  }
-});
+// app.get("/check-saved-hike", async (req, res) => {
+//   const dbQuery = await db.query(
+//     `SELECT * FROM hikes WHERE user_id=$1 AND hike_id=$2`,
+//     [req.query.user_id, req.query.hike_id]
+//   );
+//   if (dbQuery.rows.length > 0) {
+//     res.send("HIKE SAVED");
+//   }
+// });
 // Removing a hike
 app.delete("/saved-hikes", async (req, res) => {
   const dbQuery = await db.query(
@@ -204,6 +204,77 @@ app.delete("/saved-hikes", async (req, res) => {
   // if (dbQuery2.rows.length > 0) {
   res.send(dbQuery2.rows);
   // }
+});
+
+app.post("/completed-hikes", async (req, res) => {
+  try {
+    const dbQuery = await db.query(
+      `INSERT INTO completed (
+      user_id,
+      hike_id,
+      title,
+      "parkSource",
+      state,
+      "shortDescription",
+      "longDescription",
+      duration,
+      "arePetsPermitted",
+      "petsDescription",
+      "isReservationRequired",
+      "doFeesApply",
+      "feeDescription",
+      age,
+      image
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *`,
+      [
+        req.body.user_id,
+        req.body.hike_id,
+        req.body.title,
+        req.body.parkSource,
+        req.body.state,
+        req.body.shortDescription,
+        req.body.longDescription,
+        req.body.duration,
+        req.body.arePetsPermitted,
+        req.body.petsDescription,
+        req.body.isReservationRequired,
+        req.body.doFeesApply,
+        req.body.feeDescription,
+        req.body.age,
+        req.body.image,
+      ]
+    );
+    if (dbQuery.rows.length > 0) {
+      res.send(dbQuery.rows);
+      // res.send("SAVED");
+    }
+  } catch (err) {
+    console.log("ERROR Saving: ", err);
+  }
+});
+
+app.delete("/completed-hikes", async (req, res) => {
+  const dbQuery = await db.query(
+    "DELETE FROM completed WHERE user_id=$1 AND hike_id=$2",
+    [req.query.user_id, req.query.hike_id]
+  );
+  const dbQuery2 = await db.query(`SELECT * FROM completed WHERE user_id=$1`, [
+    req.query.user_id,
+  ]);
+  // if (dbQuery2.rows.length > 0) {
+  res.send(dbQuery2.rows);
+});
+
+app.get("/completed-hikes", async (req, res) => {
+  // console.log(req.query);
+  const dbQuery = await db.query(
+    "SELECT * FROM completed WHERE user_id=$1 ORDER BY state ASC",
+    [req.query.user_id]
+  );
+  // console.log(dbQuery.rows);
+  if (dbQuery.rows.length > 0) {
+    res.send(dbQuery.rows);
+  }
 });
 
 app.get("/*", function (req, res) {

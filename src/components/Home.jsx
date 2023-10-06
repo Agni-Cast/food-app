@@ -10,6 +10,8 @@ function Home({
   setSavedHikes,
   stateSource,
   setStateSource,
+  completedHikes,
+  setCompletedHikes,
 }) {
   const [searchInput, setSearchInput] = useState("");
   const [hikesResult, setHikeResult] = useState(
@@ -27,21 +29,14 @@ function Home({
     }
     return obj;
   });
-  // console.log("HIKES OBJ: ", hikesResultObj);
   //passed to singleHikes to tell the components that the hikes variable was obtained from the home page (from api response)
-  const [save, setSave] = useState(true);
+  const [onHomePage, setOnHomePage] = useState(true);
   // hikes to be shown when filter is applied
   const [hikesShown, setHikesShown] = useState(hikesResult);
   const [clickedFilters, setClickedFilters] = useState([false, false]);
-  const [filters, setFilters] = useState(
-    // JSON.parse(localStorage.getItem("filters")) ||
-    []
-  );
+  const [filters, setFilters] = useState([]);
   const [filterApplied, setFilterApplied] = useState(false);
   const [sortBy, setSortBy] = useState("park");
-
-  // console.log("USER HOME: ", user);
-  // console.log("HIKES: ", hikesResult);
 
   // sets the state to search for based on user inout
   const handleInputChange = (event) => {
@@ -99,11 +94,11 @@ function Home({
       setStateSource(dataState);
     }
   }, []);
-  // console.log("STATE HOME: ", stateSource);
   useEffect(() => {
     setHikesShown(hikesResult);
   }, [hikesResult]);
 
+  // console.log("STATE HOME: ", stateSource);
   // console.log("SearchInput: ", searchInput);
   // console.log("StateSource: ", stateSource);
   // console.log("SORT BY: ", sortBy);
@@ -129,20 +124,11 @@ function Home({
           {hikesShown.length > 0 ? (
             <div>
               {hikesShown.length} hikes in
-              {/* {searchInput} */}
               {stateSource.length > 0
                 ? stateSource
                 : hikesResult[0].relatedParks[0].states}
             </div>
           ) : null}
-          {/* {hikesShown.length > 0 ? (
-            <div>
-              {hikesShown.length} hikes in
-              {searchInput.length > 0
-                ? searchInput
-                : hikesResult[0].relatedParks[0].states}
-            </div>
-          ) : null} */}
         </div>
         <Filter
           hikesResult={hikesResult}
@@ -154,20 +140,14 @@ function Home({
           setClickedFilters={setClickedFilters}
           filters={filters}
           setFilters={setFilters}
-          // stateSource={stateSource}
         />
-        {/* Filter by:
-        <select>
-          <option value="park">Park</option>
-          <option value="duration"> Duration</option>
-        </select> */}
       </div>
       <div>
         {hikesShown.length > 0
           ? hikesShown.map((singleHike, index) => {
               // console.log(index);
               // console.log(hikesShown[index - 1]);
-              // console.log(singleHike);
+              // console.log("SINGLE HIKE: ", singleHike);
               return (
                 <div key={singleHike.id}>
                   <SingleHike
@@ -177,24 +157,19 @@ function Home({
                     hikesResult={hikesResult}
                     user={user}
                     searchInput={searchInput}
-                    save={save}
+                    onHomePage={onHomePage}
                     savedHikes={savedHikes}
                     setSavedHikes={setSavedHikes}
                     hikesShown={hikesShown}
                     stateSource={stateSource}
-                    // setStateSource={setStateSource}
-                    // hikesSaved={hikesSaved}
-                    // setHikesSaved={setHikesSaved}
-                    // isSaved={isSaved}
-                    // setIsSaved={setIsSaved}
-                    // isUser={isUser}
+                    completedHikes={completedHikes}
+                    setCompletedHikes={setCompletedHikes}
                   />
                 </div>
               );
             })
           : null}
       </div>
-      {/* <HikeDetails hikesResult={hikesResult} /> */}
     </div>
   );
 }

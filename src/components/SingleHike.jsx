@@ -4,6 +4,7 @@ import HikeDetails from "./HikeDetails.jsx";
 import Modal from "react-modal";
 import axios from "axios";
 import { FaRegHeart, FaHeart } from "react-icons/fa6";
+import { BsCheckCircle, BsCheckCircleFill } from "react-icons/bs";
 
 function SingleHike({
   /*hikesResult,*/
@@ -12,34 +13,27 @@ function SingleHike({
   user,
   searchInput,
   remove,
-  save,
+  onHomePage,
   savedHikes,
   setSavedHikes,
   onSavedPage,
   prevHike,
   hikesShown,
   stateSource,
-  // setStateSource,
-  // hikeState,
-  // setHikeState,
-  // hikesSaved,
-  // setHikesSaved,
-  // isSaved,
-  // setIsSaved,
-  // isUser,
+  onCompletedPage,
+  completedHikes,
+  setCompletedHikes,
 }) {
   // console.log("PREVIOUS HIKE: ", prevHike);
   const [clickedModal, setClickedModal] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  // const [clickedSaved, setClickedSaved] = useState(false);
   const [saveOrRemove, setSaveOrRemove] = useState(<FaRegHeart />);
-  // const [icon, setIcon] = useState(<FaRegHeart />);
   const [emptyHeart, setEmptyHeart] = useState(true);
-  // const [isSaved, setIsSaved] = useState(false);
+  const [checkOrUnccheck, setCheckOrUncheck] = useState(<BsCheckCircle />);
+  const [emptyCheck, setEmptyCheck] = useState(true);
   const [imageSource, setImageSource] = useState(
     hike.image || `${hike.images[0].url}`
   );
-  // console.log("IMAGE SOURCE: ", imageSource);
   const [parkSource, setParkSource] = useState(
     hike.parkSource || hike.relatedParks[0].fullName
   );
@@ -47,29 +41,17 @@ function SingleHike({
   const [hikeState, setHikeState] = useState(hike.state || stateSource);
   // console.log("HikeState: ", hikeState);
   // console.log("ParkSource: ", parkSource);
-  const [prevPark, setPrevPark] = useState(
-    ""
-    //   () => {
-    //   // if (prevHike) {
-    //   //   return prevHike.parkSource || prevHike.relatedParks[0].fullName;
-    //   // }
-    // }
-  );
-  // const [prevState, setPrevState] = useState("");
+  const [prevPark, setPrevPark] = useState("");
   // console.log("PREV PARK: ", prevPark);
   // console.log("PREV STATE: ", prevState);
   useEffect(() => {
     if (prevHike && prevHike.parkSource) {
       setPrevPark(prevHike.parkSource);
-      // setPrevState(prevHike.state);
     } else if (prevHike && prevHike.relatedParks[0].fullName) {
       setPrevPark(prevHike.relatedParks[0].fullName);
     }
   }, [hikesShown]);
   // console.log("PARK SOURCE: ", parkSource);
-  // const [stateSource, setStateSource] = useState(
-  //   hike.state || hike.relatedParks[0].state
-  // );
 
   const navigate = useNavigate();
 
@@ -83,7 +65,6 @@ function SingleHike({
   };
   // console.log("STATE: ", stateSource);
   const saveHike = async (hikeToSave) => {
-    // if (saveOrRemove === "Save") {
     const data = {
       user_id: user.id,
       hike_id: hikeToSave.id,
@@ -106,7 +87,6 @@ function SingleHike({
       const res = await axios.post("/saved-hikes", data);
       // console.log(res.data);
       if (res.data.length > 0) {
-        // setClickedSaved(true);
         setSavedHikes(
           [...savedHikes, res.data[0]].sort(
             (a, b) =>
@@ -121,13 +101,9 @@ function SingleHike({
     } catch (error) {
       console.log("ERROR SAVING HIKE: ", error);
     }
-    // } else {
-    //   removeHike(hikeToSave);
-    // }
   };
 
   const removeHike = (hikeToremove) => {
-    // setClickedSaved(!clickedSaved);
     let idToRemove = hikeToremove.hike_id || hikeToremove.id;
     axios
       .delete(`/saved-hikes?user_id=${user.id}&hike_id=${idToRemove}`)
@@ -149,6 +125,66 @@ function SingleHike({
         console.log("ERROR REMOVING HIKE: ", error);
       });
   };
+
+  const saveCompleted = async (hikeCommpleted) => {
+    const data = {
+      user_id: user.id,
+      hike_id: hikeCommpleted.id,
+      title: hikeCommpleted.title,
+      parkSource:
+        hike.relatedParks[0].fullName /*hikeCommpleted.relatedParks[0].states*/,
+      state: stateSource,
+      shortDescription: hikeCommpleted.shortDescription,
+      longDescription: hikeCommpleted.longDescription,
+      duration: hikeCommpleted.duration,
+      arePetsPermitted: hikeCommpleted.arePetsPermitted,
+      petsDescription: hikeCommpleted.petsDescription,
+      isReservationRequired: hikeCommpleted.isReservationRequired,
+      doFeesApply: hikeCommpleted.doFeesApply,
+      feeDescription: hikeCommpleted.feeDescription,
+      age: hikeCommpleted.age,
+      image: hikeCommpleted.images[0].url,
+    };
+    try {
+      const res = await axios.post("/completed-hikes", data);
+      if (res.data.length > 0) {
+        setCompletedHikes(
+          [...completedHikes, res.data[0]].sort(
+            (a, b) =>
+              a.state.localeCompare(b.state) ||
+              a.parkSource.localeCompare(b.parkSource) ||
+              a.title.localeCompare(b.title)
+          )
+        );
+        setCheckOrUncheck(<BsCheckCircleFill />);
+        setEmptyCheck(false);
+      }
+    } catch (error) {
+      console.log("ERROR SAVING COMPLETED HIKE: ", error);
+    }
+  };
+
+  const removeCompleted = (hikeNotCompleted) => {
+    let idToRemove = hikeNotCompleted.hike_id || hikeNotCompleted.id;
+    axios
+      .delete(`/completed-hikes?user_id=${user.id}&hike_id=${idToRemove}`)
+      .then((res) => {
+        setCompletedHikes(
+          res.data.sort(
+            (a, b) =>
+              a.state.localeCompare(b.state) ||
+              a.parkSource.localeCompare(b.parkSource) ||
+              a.title.localeCompare(b.title)
+          )
+        );
+        console.log("REMOVED!!!!!!");
+        setCheckOrUncheck(<BsCheckCircle />);
+        setEmptyCheck(true);
+      })
+      .catch((error) => {
+        console.log("ERROR REMOVING COMPLETED HIKE: ", error);
+      });
+  };
   const handleClickButton = (oneHike) => {
     if (emptyHeart === true) {
       saveHike(oneHike);
@@ -156,40 +192,50 @@ function SingleHike({
       removeHike(oneHike);
     }
   };
+  const handleClickButtonComplete = (oneHike) => {
+    if (emptyCheck === true) {
+      saveCompleted(oneHike);
+    } else if (emptyCheck === false) {
+      removeCompleted(oneHike);
+    }
+  };
   // console.log("clicked save: ", clickedSaved);
   // console.log("HIKE: ", hike);
-  useEffect(() => {
-    if (save) {
-      // console.log(hike);
-      for (let obj of savedHikes) {
-        // console.log("OBJ.ID", obj.hike_id);
-        // console.log("HIKE.ID", hike.id);
 
+  useEffect(() => {
+    if (onHomePage) {
+      for (let obj of savedHikes) {
         if (obj.hike_id === hike.id) {
-          // console.log("ALREADY SAVED!!!!!!!");
           setSaveOrRemove(<FaHeart />);
           setEmptyHeart(false);
         }
       }
     }
   }, [savedHikes]);
+
+  useEffect(() => {
+    if (onHomePage) {
+      for (let obj of completedHikes) {
+        if (obj.hike_id === hike.id) {
+          setCheckOrUncheck(<BsCheckCircleFill />);
+          setEmptyCheck(false);
+        }
+      }
+    }
+  }, [completedHikes]);
   useEffect(() => {}, [hikesShown]);
   useEffect(() => {}, [savedHikes]);
-  // useEffect(() => {
-  //   if (onSavedPage) {
-  //     setHikeState(hike.state);
-  //   }
-  // }, [onSavedPage]);
-  // console.log("HIKE!!!!!!!", hike);
+  useEffect(() => {}, [completedHikes]);
+  // const name = onCompletedPage ? "imgCompleted" : "imgHomeSaved";
+
   return (
     <div>
-      {/* <Link to="/details"> */}
       <div style={{ fontSize: "35px" }}>
         {/* {onSavedPage && hikeState !== prevPark ? prevState : null} */}
         {/* {onSavedPage && hikeState !== prevState ? hikeState : null} */}
       </div>
-      <div style={{ fontSize: "30px" }}>
-        {!onSavedPage && parkSource !== prevPark ? parkSource : null}
+      <div className={name} style={{ fontSize: "30px" }}>
+        {onHomePage && parkSource !== prevPark ? parkSource : null}
       </div>
       <div onClick={handleClick} style={{ padding: "10px" }}>
         <img style={{ hight: "300px", width: "300px" }} src={imageSource} />
@@ -198,22 +244,24 @@ function SingleHike({
         <div>{parkSource}</div>
         <div>{hike.id}</div>
       </div>
-      {save ? (
+      {onHomePage ? (
         <button
           onClick={() => handleClickButton(hike)} /*disabled={clickedSaved}*/
         >
           {saveOrRemove}
         </button>
       ) : null}
-      {/* {!isSaved ? (
-        <button onClick={() => saveHike(hike)} disabled={clickedSaved}>
-          Save
+      {onHomePage ? (
+        <button onClick={() => handleClickButtonComplete(hike)}>
+          {checkOrUnccheck}
         </button>
-      ) : (
-        <button onClick={() => removeHike(hike)}>Remove</button>
-      )} */}
-
+      ) : null}
       {/* line below is ok, only runs from Saved page, no need to modify */}
+      {onCompletedPage ? (
+        <button onClick={() => removeCompleted(hike)}>
+          <BsCheckCircleFill />
+        </button>
+      ) : null}
       {remove ? (
         <button onClick={() => removeHike(hike)}>
           <FaHeart />
@@ -233,13 +281,10 @@ function SingleHike({
             onSavedPage={onSavedPage}
             stateSource={stateSource}
             hikeState={hikeState}
-            // stateSource={stateSource}
           />
           {/* <div>{hike.duration}</div> <button onClick={closeModal}>close</button> */}
         </Modal>
       ) : null}
-      {/* </Link> */}
-      {/* <HikeDetails hikesResult={hikesResult} hike={hike} index={index} /> */}
     </div>
   );
 }

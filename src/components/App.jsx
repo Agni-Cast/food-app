@@ -13,7 +13,7 @@ import Home from "./Home.jsx";
 import Login from "./Login.jsx";
 import HikeDetails from "./HikeDetails.jsx";
 import axios from "axios";
-import SearchResult from "./SearchResult.jsx";
+import Completed from "./Completed.jsx";
 
 const App = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const App = () => {
   const [stateSource, setStateSource] = useState(
     JSON.parse(localStorage.getItem("stateSource")) || ""
   );
-
+  const [completedHikes, setCompletedHikes] = useState([]);
   const handleLogOut = () => {
     axios.get("/logout").then((res) => {
       setUser({});
@@ -33,41 +33,29 @@ const App = () => {
 
   useEffect(() => {
     axios.get("/session").then((res) => {
-      // console.log("SESSION res: ", res);
       if (res.data.user_id) {
-        // console.log("SESSION -client res.data.user_id: ", res.data.user_id);
         setUser({ username: res.data.username, id: res.data.user_id });
       } else {
         localStorage.clear();
       }
     });
   }, [user.id]);
-  // console.log("USER; ", user);
 
-  ///////////////////////////////////////////////////
-  console.log("SAVED Hikes: ", savedHikes);
   useEffect(() => {
     if (user.id) {
       axios.get(`/saved-hikes?user_id=${user.id}`).then((res) => {
-        // console.log(res.data);
         setSavedHikes(res.data);
-        // setSavedHikes(
-        //   res.data.sort(
-        //     (a, b) =>
-        //       // console.log("PARK: ", b.relatedParks[0].fullName)
-        //       // a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
-
-        //       a.parkSource.localeCompare(b.parkSource) ||
-        //       a.title.localeCompare(b.title)
-        //   )
-        // );
+      });
+      axios.get(`/completed-hikes?user_id=${user.id}`).then((res) => {
+        setCompletedHikes(res.data);
       });
     }
   }, [user.id]);
+
+  // console.log("USER; ", user);
   // console.log("SAVED HIKES: ", savedHikes);
-  ////////////////////////////////////////////////////
+  // console.log("COMPLETED HIKES: ", completedHikes);
   return (
-    // <BrowserRouter>
     <>
       <nav style={{ margin: 10 }}>
         <Link to="/" style={{ padding: 5 }}>
@@ -77,6 +65,11 @@ const App = () => {
         {user.id && (
           <Link to="/saved" style={{ padding: 5 }}>
             Saved
+          </Link>
+        )}
+        {user.id && (
+          <Link to="/completed" style={{ padding: 5 }}>
+            Completed
           </Link>
         )}
         {!user.id && (
@@ -108,6 +101,8 @@ const App = () => {
               setSavedHikes={setSavedHikes}
               stateSource={stateSource}
               setStateSource={setStateSource}
+              completedHikes={completedHikes}
+              setCompletedHikes={setCompletedHikes}
             />
           }
         />
@@ -119,7 +114,16 @@ const App = () => {
               savedHikes={savedHikes}
               setSavedHikes={setSavedHikes}
               stateSource={stateSource}
-              // setStateSource={setStateSource}
+            />
+          }
+        />
+        <Route
+          path="/completed"
+          element={
+            <Completed
+              user={user}
+              completedHikes={completedHikes}
+              setCompletedHikes={setCompletedHikes}
             />
           }
         />
@@ -132,13 +136,8 @@ const App = () => {
           element={<Login user={user} setUser={setUser} />}
         />
         <Route path="/details" element={<HikeDetails />}></Route>
-        {/* <Route
-          path="/searchResult"
-          element={<SearchResult user={user} />}
-        ></Route> */}
       </Routes>
     </>
-    // </BrowserRouter>
   );
 };
 

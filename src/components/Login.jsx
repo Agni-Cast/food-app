@@ -18,14 +18,7 @@ function Login({ user, setUser }) {
     setPassword(event.target.value);
   };
 
-  // useEffect(() => {
-  //   if (user.id) {
-  //     navigate("/");
-  //   }
-  // }, [user]);
-
   const handleSubmit = async () => {
-    // event.preventDefault();
     try {
       console.log("USERNAME: ", username);
       if (

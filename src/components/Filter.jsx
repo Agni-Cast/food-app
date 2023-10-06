@@ -15,22 +15,10 @@ function Filter({
 }) {
   const [clickedModal, setClickedModal] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
-  // const [filters, setFilters] = useState(
-  //   // JSON.parse(localStorage.getItem("filters")) ||
-  //   []
-  // );
   const [allFilters, setAllFilters] = useState(["Pets Allowed", "No Fees"]);
-
-  /////////////////////////////////////////////////////
   const [filtersObj, setFiltersObj] = useState({});
   const [filterOn, setFilterOn] = useState(false);
-  // const [clickedFilters, setClickedFilters] = useState([false, false]);
-  // console.log("CLICKEDFILTERS ARR: ", clickedFilters);
-  // const handleButtonColor = () => {
-  //   if (filterOn) {
-  //     return 'Blue'
-  //   }
-  // }
+
   const createFiltersObj = () => {
     setFiltersObj(
       Object.assign(filtersObj, {
@@ -55,21 +43,14 @@ function Filter({
 
   const handleClickeFilter = (index) => {
     const newArr = clickedFilters.map((bool, i) => {
-      // console.log("BOOL: ", bool);
-      // console.log("INDEX: ", index);
-      // console.log("I : ", i);
-
       if (i === index) {
-        console.log("inverse BOOL: ", !bool);
         return !bool;
       } else {
         return bool;
       }
     });
-    // console.log("newArr: ", newArr);
     setClickedFilters(newArr);
   };
-  /////////////////////////////////////////////////////
 
   const handleClickModal = () => {
     setClickedModal(true);
@@ -80,28 +61,6 @@ function Filter({
     setModalOpen(false);
   };
 
-  // const handleFilterBy = (value) => {
-  //   for (let filt of filters) {
-  //     if (value === "Pets Allowed") {
-  //       setHikesShown(
-  //         hikesShown.filter((hike) => {
-  //           return hike["arePetsPermitted"] === "true";
-  //         })
-  //       );
-  //       // setFilterApplied(true);
-  //       // setFilters([...filters, "Pets Allowed"]);
-  //     }
-  //     if (value === "No Fees") {
-  //       setHikesShown(
-  //         hikesShown.filter((hike) => {
-  //           return hike.doFeesApply === "false";
-  //         })
-  //       );
-  //       // setFilterApplied(true);
-  //       // setFilters([...filters, "No Fees"]);
-  //     }
-  //   }
-  // };
   const handleFilterBy = () => {
     for (let filt of filters) {
       if (filt === "Pets Allowed") {
@@ -196,21 +155,12 @@ function Filter({
           ariaHideApp={false}
         >
           Filter by:
-          {/* <button onClick={handleFilterBy} value="No Fees">
-            No Fees
-          </button>
-          <button onClick={handleFilterBy} value="Pets">
-            Pets
-          </button>
-          <button onClick={closeModal}>Apply</button> */}
           {allFilters.map((filter, index) => {
             return (
               <div>
                 <FilterButtons
                   key={index}
-                  // filters={filter}
                   filter={filter}
-                  // handleFilterBy={handleFilterBy}
                   removeFilter={removeFilter}
                   handleSetFilters={handleSetFilters}
                   clickedFilters={clickedFilters}
@@ -219,19 +169,6 @@ function Filter({
                   handleClickeFilter={handleClickeFilter}
                 />
               </div>
-              // <button
-              //   key={index}
-              //   onClick={
-              //     () => {
-              //       handleSetFilters(event.target.value);
-              //       // handleFilterBy();
-              //     }
-              //     // () => console.log("!!!!!", event.target.value)
-              //   }
-              //   value={filter}
-              // >
-              //   {filter}
-              // </button>
             );
           })}
           <button onClick={closeModal}>Show results</button>
@@ -258,10 +195,6 @@ function Filter({
           </div>
         ) : null}
       </div>
-      {/* <select onChange={handleFilterBy} multiple={true}>
-        <option value="noFees">No Fees</option>
-        <option value="pets"> Pets</option>
-      </select> */}
     </div>
   );
 }
