@@ -12,6 +12,10 @@ function Home({
   setStateSource,
   completedHikes,
   setCompletedHikes,
+  // hikesShown,
+  // setHikesShown,
+  // hikesResult,
+  // setHikeResult,
 }) {
   const [searchInput, setSearchInput] = useState("");
   const [hikesResult, setHikeResult] = useState(
@@ -33,6 +37,7 @@ function Home({
   const [onHomePage, setOnHomePage] = useState(true);
   // hikes to be shown when filter is applied
   const [hikesShown, setHikesShown] = useState(hikesResult);
+  const [hikesShown2, setHikesShown2] = useState(hikesResult);
   const [clickedFilters, setClickedFilters] = useState([false, false]);
   const [filters, setFilters] = useState([]);
   const [filterApplied, setFilterApplied] = useState(false);
@@ -52,6 +57,8 @@ function Home({
       //   // console.log("PARK: ", b.relatedParks[0].fullName)
       //   a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
       // );
+      // console.log("Results: ", res.data.data);
+
       setHikeResult(
         res.data.data.sort(
           (a, b) =>
@@ -94,9 +101,51 @@ function Home({
       setStateSource(dataState);
     }
   }, []);
+  const countHikes = () => {
+    let count = 0;
+    if (hikesShown.length > 0) {
+      for (let i = 0; i < hikesShown.length; i++) {
+        count += hikesShown[i].length;
+      }
+    }
+    console.log(count);
+    return count;
+  };
+
+  const hikesArrays = () => {
+    let res = [];
+    let sameArr = [hikesResult[0]];
+    if (hikesResult.length > 0) {
+      for (let i = 1; i < hikesResult.length; i++) {
+        if (
+          hikesResult[i].relatedParks[0].fullName ===
+          hikesResult[i - 1].relatedParks[0].fullName
+        ) {
+          sameArr.push(hikesResult[i]);
+          // sameArr.push(hikesResult[i].relatedParks[0].fullName);
+        } else {
+          res.push(sameArr);
+          sameArr = [];
+          sameArr.push(hikesResult[i]);
+          // sameArr.push(hikesResult[i].relatedParks[0].fullName);
+        }
+      }
+      res.push(sameArr);
+    }
+    setHikesShown(res);
+    // setHikesShown2(hikesResult);
+    console.log("RES: ", res);
+  };
   useEffect(() => {
+    console.log("helooooooooooooooooo");
     setHikesShown(hikesResult);
+    setHikesShown2(hikesResult);
+    // if (onHomePage && hikesResult.length > 0) {
+    hikesArrays();
+    // }
   }, [hikesResult]);
+  // console.log("HIKES SHOWN: ", hikesShown);
+  console.log("Hikes Result: ", hikesResult);
 
   // console.log("STATE HOME: ", stateSource);
   // console.log("SearchInput: ", searchInput);
@@ -107,8 +156,11 @@ function Home({
   // console.log("HIKES RESULT: ", hikesResult);
   // console.log("HIKES SHOWN: ", hikesShown);
   return (
-    <div>
-      <div className="header">
+    <div className="home">
+      <div
+        className="headerHome"
+        style={{ marginLeft: "5px", marginTop: "15px", marginBottom: "15px" }}
+      >
         <div>Home</div>
         <input
           onChange={handleInputChange}
@@ -123,7 +175,8 @@ function Home({
           {/* only works when a state has already been searched, doesn't work at login */}
           {hikesShown.length > 0 ? (
             <div>
-              {hikesShown.length} hikes in
+              {/* {hikesShown.length}  */}
+              {countHikes()} hikes in
               {stateSource.length > 0
                 ? stateSource
                 : hikesResult[0].relatedParks[0].states}
@@ -140,34 +193,54 @@ function Home({
           setClickedFilters={setClickedFilters}
           filters={filters}
           setFilters={setFilters}
+          hikesShown2={hikesShown2}
+          setHikesShown2={setHikesShown2}
         />
       </div>
-      <div>
-        {hikesShown.length > 0
-          ? hikesShown.map((singleHike, index) => {
-              // console.log(index);
-              // console.log(hikesShown[index - 1]);
-              // console.log("SINGLE HIKE: ", singleHike);
-              return (
-                <div key={singleHike.id}>
-                  <SingleHike
-                    hike={singleHike}
-                    index={index}
-                    prevHike={hikesShown[index - 1]}
-                    hikesResult={hikesResult}
-                    user={user}
-                    searchInput={searchInput}
-                    onHomePage={onHomePage}
-                    savedHikes={savedHikes}
-                    setSavedHikes={setSavedHikes}
-                    hikesShown={hikesShown}
-                    stateSource={stateSource}
-                    completedHikes={completedHikes}
-                    setCompletedHikes={setCompletedHikes}
-                  />
-                </div>
-              );
-            })
+      <div className="allHikes">
+        {hikesShown.length > 0 && Array.isArray(hikesShown[0])
+          ? hikesShown.map(
+              (
+                // singleHike,
+                // index
+                parkArr,
+                arrIndex
+              ) => {
+                return (
+                  <div className="hikesParkHome" key={arrIndex}>
+                    {parkArr.map((singleHike, index) => {
+                      // })
+                      // console.log(index);
+                      // console.log(hikesShown[index - 1]);
+                      // console.log(
+                      //   "SINGLE HIKE: ",
+                      //   singleHike.relatedParks[0].fullName
+                      // );
+
+                      return (
+                        <div className="hikeCard" key={singleHike.id}>
+                          <SingleHike
+                            hike={singleHike}
+                            index={index}
+                            prevHike={parkArr[index - 1]}
+                            hikesResult={hikesResult}
+                            user={user}
+                            searchInput={searchInput}
+                            onHomePage={onHomePage}
+                            savedHikes={savedHikes}
+                            setSavedHikes={setSavedHikes}
+                            hikesShown={hikesShown}
+                            stateSource={stateSource}
+                            completedHikes={completedHikes}
+                            setCompletedHikes={setCompletedHikes}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
+              }
+            )
           : null}
       </div>
     </div>

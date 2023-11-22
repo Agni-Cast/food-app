@@ -23,8 +23,12 @@ function SingleHike({
   onCompletedPage,
   completedHikes,
   setCompletedHikes,
+  shownHikesSaved,
+  shownHikesComp,
 }) {
   // console.log("PREVIOUS HIKE: ", prevHike);
+  // console.log("HIKE: ", hike);
+
   const [clickedModal, setClickedModal] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [saveOrRemove, setSaveOrRemove] = useState(<FaRegHeart />);
@@ -32,6 +36,13 @@ function SingleHike({
   const [checkOrUnccheck, setCheckOrUncheck] = useState(<BsCheckCircle />);
   const [emptyCheck, setEmptyCheck] = useState(true);
   const [imageSource, setImageSource] = useState(
+    //   () => {
+    //   if (onHomePage && hike !== undefined) {
+    //     return `${hike.images[0].url}`;
+    //   } else if ((onSavedPage || onCompletedPage) && hike !== undefined) {
+    //     return hike.image;
+    //   }
+    // }
     hike.image || `${hike.images[0].url}`
   );
   const [parkSource, setParkSource] = useState(
@@ -44,15 +55,23 @@ function SingleHike({
   const [prevPark, setPrevPark] = useState("");
   // console.log("PREV PARK: ", prevPark);
   // console.log("PREV STATE: ", prevState);
+  const [prevState, setPrevState] = useState("");
   useEffect(() => {
     if (prevHike && prevHike.parkSource) {
       setPrevPark(prevHike.parkSource);
+      setPrevState(prevHike.state);
+      setParkSource(hike.parkSource);
+      setHikeState(hike.state);
     } else if (prevHike && prevHike.relatedParks[0].fullName) {
       setPrevPark(prevHike.relatedParks[0].fullName);
     }
-  }, [hikesShown]);
+  }, [hikesShown, shownHikesSaved, shownHikesComp]);
+  // console.log("PrevHike: ", prevHike);
+  // console.log("HikeState: ", hikeState);
+  // console.log("PrevState: ", prevState);
   // console.log("PARK SOURCE: ", parkSource);
-
+  // console.log("Hike: ", hike);
+  // console.log("prev hike: ", prevHike);
   const navigate = useNavigate();
 
   const handleClick = (event) => {
@@ -224,48 +243,67 @@ function SingleHike({
     }
   }, [completedHikes]);
   useEffect(() => {}, [hikesShown]);
-  useEffect(() => {}, [savedHikes]);
+  // useEffect(() => {}, [savedHikes]);
   useEffect(() => {}, [completedHikes]);
   // const name = onCompletedPage ? "imgCompleted" : "imgHomeSaved";
 
   return (
-    <div>
-      <div style={{ fontSize: "35px" }}>
+    <div className="hikeCardInside">
+      <div style={{ fontSize: "25px" }}>
         {/* {onSavedPage && hikeState !== prevPark ? prevState : null} */}
-        {/* {onSavedPage && hikeState !== prevState ? hikeState : null} */}
+        {onSavedPage && hikeState !== prevState ? hikeState : null}
+        {onCompletedPage && hikeState !== prevState ? hikeState : null}
       </div>
-      <div className={name} style={{ fontSize: "30px" }}>
-        {onHomePage && parkSource !== prevPark ? parkSource : null}
+      <div style={{ fontSize: "20px", height: "20px" }}>
+        {onHomePage && parkSource !== prevPark ? parkSource : " "}
+        {onSavedPage && parkSource !== prevPark ? parkSource : " "}
+        {onCompletedPage && parkSource !== prevPark ? parkSource : " "}
       </div>
       <div onClick={handleClick} style={{ padding: "10px" }}>
-        <img style={{ hight: "300px", width: "300px" }} src={imageSource} />
+        <img
+          className="image"
+          style={{ objectFit: "cover", height: "250px", width: "300px" }}
+          src={hike.image || hike.images[0].url}
+        />
         <div style={{ fontSize: "20px" }}>{hike.title}</div>
         <div>at</div>
         <div>{parkSource}</div>
         <div>{hike.id}</div>
       </div>
       {onHomePage ? (
-        <button
-          onClick={() => handleClickButton(hike)} /*disabled={clickedSaved}*/
-        >
-          {saveOrRemove}
-        </button>
+        <span>
+          <button
+            className="buttons"
+            onClick={() => handleClickButton(hike)} /*disabled={clickedSaved}*/
+          >
+            {saveOrRemove}
+          </button>
+        </span>
       ) : null}
       {onHomePage ? (
-        <button onClick={() => handleClickButtonComplete(hike)}>
-          {checkOrUnccheck}
-        </button>
+        <span>
+          <button
+            className="buttons"
+            onClick={() => handleClickButtonComplete(hike)}
+          >
+            {checkOrUnccheck}
+          </button>
+        </span>
       ) : null}
       {/* line below is ok, only runs from Saved page, no need to modify */}
       {onCompletedPage ? (
-        <button onClick={() => removeCompleted(hike)}>
-          <BsCheckCircleFill />
-        </button>
+        <span>
+          <button className="buttons" onClick={() => removeCompleted(hike)}>
+            <BsCheckCircleFill />
+          </button>
+        </span>
       ) : null}
       {remove ? (
-        <button onClick={() => removeHike(hike)}>
-          <FaHeart />
-        </button>
+        <span>
+          <button className="buttons" onClick={() => removeHike(hike)}>
+            <FaHeart />
+          </button>
+        </span>
       ) : null}
       {clickedModal === true ? (
         <Modal
@@ -273,14 +311,57 @@ function SingleHike({
           isOpen={modalOpen}
           ariaHideApp={false}
           onRequestClose={closeModal}
+          style={{
+            overlay: {
+              position: "fixed",
+              // inset: 55,
+              // top: 0,
+              // left: 0,
+              // right: 0,
+              // bottom: 0,
+              backgroundColor: "rgba(255, 255, 255, 0.75)",
+            },
+            content: {
+              position: "absolute",
+              top: "40px",
+              left: "40px",
+              right: "40px",
+              bottom: "40px",
+              border: "1px solid #094406",
+              background: "#fff",
+              overflow: "auto",
+              // WebkitOverflowScrolling: "touch",
+              borderRadius: "20px",
+              borderWidth: "2px",
+              outline: "none",
+              padding: "20px",
+            },
+            // overlay: {
+            //   position: "fixed",
+            //   inset: "54px",
+            //   backgroundColor: "rgba(255, 255, 255, 0.85)",
+            //   width: "700px",
+            //   height: "600px",
+            //   overflow: "auto",
+            // },
+          }}
         >
           <HikeDetails
+            className="innerModal"
             closeModal={closeModal}
             hike={hike}
             parkSource={parkSource}
             onSavedPage={onSavedPage}
             stateSource={stateSource}
             hikeState={hikeState}
+            // style={{
+            //   overlay: {
+
+            //     border: "1px solid black",
+            //     padding: "40px",
+            //     borderRadius: "20px",
+            //   }
+            // }}
           />
           {/* <div>{hike.duration}</div> <button onClick={closeModal}>close</button> */}
         </Modal>

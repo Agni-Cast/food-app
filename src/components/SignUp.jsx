@@ -31,25 +31,46 @@ function SignUp({ user, setUser }) {
 
   // console.log("Signup: ", username, password);
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          onChange={handleChangeUsername}
-          placeholder="Username"
-          value={username}
-        ></input>
-        <input
-          onChange={handleChangePassword}
-          placeholder="Password"
-          value={password}
-        ></input>
-        <div>
-          <button type="submit">Create Account</button>
-        </div>
-      </form>
-      <div>
+    <div className="signupContainer">
+      <div className="signupWord">Create an Account</div>
+      <div className="signup">
+        <form className="signupForm" onSubmit={handleSubmit}>
+          <div>Email</div>
+
+          <input
+            className="signupInput"
+            onChange={handleChangeUsername}
+            placeholder="Username"
+            value={username}
+          ></input>
+          <div>Password</div>
+
+          <input
+            className="signupInput"
+            onChange={handleChangePassword}
+            placeholder="Password"
+            value={password}
+          ></input>
+          {/* <div> */}
+          <button className="signupButton" type="submit">
+            Sign up
+          </button>
+          {/* </div> */}
+        </form>
+      </div>
+
+      <div className="loginLink">
         <div>Already have an account?</div>
-        <Link to="/login">Login</Link>
+        <span
+          style={{
+            margin: "4px",
+            textDecoration: "none",
+            cursor: "pointer",
+            color: "rgb(212, 229, 202)",
+          }}
+        >
+          <Link to="/login">Login</Link>
+        </span>
       </div>
     </div>
   );

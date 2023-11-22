@@ -52,28 +52,49 @@ function Login({ user, setUser }) {
   // console.log("Login: ", username, password);
 
   return (
-    <div>
-      <form>
-        <input
-          onChange={handleUsernameChange}
-          placeholder="Username"
-          value={username}
-        ></input>
-        <input
-          onChange={handlePasswordChange}
-          placeholder="Password"
-          value={password}
-          type="password"
-        ></input>
-        <button type="submit" onClick={handleSubmit}>
-          Login
-        </button>
-        <div>{inputError ? <div>{errorMessage}</div> : null}</div>
-      </form>
-      {/* <div>{errorMessage}</div> */}
-      <div>
+    <div className="loginContainer">
+      <div className="loginWord">Login to your Account</div>
+      <div className="login">
+        <form className="loginForm">
+          {/* <div className="loginInput"> */}
+          <div>Email</div>
+          <input
+            className="loginInput"
+            onChange={handleUsernameChange}
+            placeholder="Username"
+            value={username}
+          ></input>
+          {/* </div> */}
+          {/* <div> */}
+          <div>Password</div>
+
+          <input
+            className="loginInput"
+            onChange={handlePasswordChange}
+            placeholder="Password"
+            value={password}
+            type="password"
+          ></input>
+          {/* </div> */}
+          <button className="loginButton" type="submit" onClick={handleSubmit}>
+            Login
+          </button>
+          <div>{inputError ? <div>{errorMessage}</div> : null}</div>
+        </form>
+        {/* <div>{errorMessage}</div> */}
+      </div>
+      <div className="signupLink">
         <div>Don't have an account?</div>
-        <Link to="/signup">Sign up</Link>
+        <span
+          style={{
+            margin: "4px",
+            textDecoration: "none",
+            cursor: "pointer",
+            color: "rgb(212, 229, 202)",
+          }}
+        >
+          <Link to="/signup">Sign up</Link>
+        </span>
       </div>
     </div>
   );

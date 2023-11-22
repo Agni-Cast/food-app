@@ -23,6 +23,88 @@ const App = () => {
     JSON.parse(localStorage.getItem("stateSource")) || ""
   );
   const [completedHikes, setCompletedHikes] = useState([]);
+  // const [hikesResult, setHikeResult] = useState(
+  //   // JSON.parse(localStorage.getItem("hikesResult")) ||
+  //   []
+  // );
+  // const [hikesShown, setHikesShown] = useState(hikesResult);
+  const [shownHikesSaved, setShownHikesSaved] = useState(savedHikes);
+  const [shownHikesComp, setShownHikesComp] = useState(completedHikes);
+
+  const hikesArraysSaved = () => {
+    if (savedHikes.length > 0) {
+      let res = [];
+      let sameArr = [];
+      let sameArr2 = [savedHikes[0]];
+      if (savedHikes.length > 0) {
+        for (let i = 1; i < savedHikes.length; i++) {
+          if (savedHikes[i].state === savedHikes[i - 1].state) {
+            if (savedHikes[i].parkSource === savedHikes[i - 1].parkSource) {
+              // sameArr.push(savedHikes[i]);
+              sameArr2.push(savedHikes[i]);
+            } else {
+              sameArr.push(sameArr2);
+              sameArr2 = [];
+              // sameArr.push(savedHikes[i]);
+              sameArr2.push(savedHikes[i]);
+            }
+          } else {
+            sameArr.push(sameArr2);
+            res.push(sameArr);
+            sameArr = [];
+            sameArr2 = [];
+            sameArr2.push(savedHikes[i]);
+          }
+        }
+        sameArr.push(sameArr2);
+        res.push(sameArr);
+      }
+      // setHikesShown(res);
+      setShownHikesSaved(res);
+      console.log("SAVED RES: ", res);
+    }
+  };
+
+  const hikesArraysComp = () => {
+    if (completedHikes.length > 0) {
+      let res = [];
+      let sameArr = [];
+      let sameArr2 = [completedHikes[0]];
+      if (completedHikes.length > 0) {
+        for (let i = 1; i < completedHikes.length; i++) {
+          if (completedHikes[i].state === completedHikes[i - 1].state) {
+            if (
+              completedHikes[i].parkSource === completedHikes[i - 1].parkSource
+            ) {
+              // sameArr.push(completedHikes[i]);
+              sameArr2.push(completedHikes[i]);
+            } else {
+              sameArr.push(sameArr2);
+              sameArr2 = [];
+              // sameArr.push(completedHikes[i]);
+              sameArr2.push(completedHikes[i]);
+            }
+          } else {
+            sameArr.push(sameArr2);
+            res.push(sameArr);
+            sameArr = [];
+            sameArr2 = [];
+            sameArr2.push(completedHikes[i]);
+          }
+        }
+        sameArr.push(sameArr2);
+        res.push(sameArr);
+      }
+      // setHikesShown(res);
+      setShownHikesComp(res);
+      console.log("COMP RES: ", res);
+    }
+  };
+
+  useEffect(() => {
+    hikesArraysComp();
+  }, [completedHikes]);
+
   const handleLogOut = () => {
     axios.get("/logout").then((res) => {
       setUser({});
@@ -53,43 +135,125 @@ const App = () => {
   }, [user.id]);
 
   // console.log("USER; ", user);
-  // console.log("SAVED HIKES: ", savedHikes);
-  // console.log("COMPLETED HIKES: ", completedHikes);
+  console.log("COMPLETED HIKES: ", completedHikes);
+  console.log("SHOWN completed: ", shownHikesComp);
+  // useEffect(() => {}, [savedHikes]);
+  // console.log("Saved Hikes 1: ", savedHikes);
+
+  useEffect(() => {
+    // shownHikesSaved(savedHikes);
+    hikesArraysSaved();
+  }, [savedHikes]);
+  // console.log("Saved Hikes 2: ", savedHikes);
+  // console.log("SHOWN Saved Hikes: ", shownHikesSaved);
   return (
     <>
-      <nav style={{ margin: 10 }}>
-        <Link to="/" style={{ padding: 5 }}>
-          NPTrails
-        </Link>
-        <span> | </span>
-        {user.id && (
-          <Link to="/saved" style={{ padding: 5 }}>
-            Saved
-          </Link>
-        )}
-        {user.id && (
-          <Link to="/completed" style={{ padding: 5 }}>
-            Completed
-          </Link>
-        )}
-        {!user.id && (
-          <Link to="/signup" style={{ padding: 5 }}>
-            Sign up
-          </Link>
-        )}
-        {!user.id && (
-          <Link to="/login" style={{ padding: 5 }}>
-            Login
-          </Link>
-        )}
-        {user.id && (
-          <span
-            onClick={handleLogOut}
-            style={{ padding: 5, cursor: "pointer" }}
+      <nav className="navigation">
+        <div className="leftNav">
+          <Link
+            to="/"
+            style={{
+              textDecoration: "none",
+              padding: 5,
+              cursor: "pointer",
+              color: "rgb(212, 229, 202)",
+            }}
           >
-            Logout
-          </span>
-        )}
+            Home
+          </Link>
+          <span style={{ padding: 5, color: "rgb(212, 229, 202)" }}> | </span>
+          {user.id && (
+            <>
+              <Link
+                to="/saved"
+                style={{
+                  textDecoration: "none",
+                  padding: 5,
+                  cursor: "pointer",
+                  color: "rgb(212, 229, 202)",
+                }}
+              >
+                Saved
+              </Link>
+              <span style={{ padding: 5, color: "rgb(212, 229, 202)" }}>
+                {" "}
+                |{" "}
+              </span>
+            </>
+          )}
+          {user.id && (
+            <>
+              <Link
+                to="/completed"
+                style={{
+                  textDecoration: "none",
+                  padding: 5,
+                  cursor: "pointer",
+                  color: "rgb(212, 229, 202)",
+                }}
+              >
+                Completed
+              </Link>
+              <span style={{ padding: 5, color: "rgb(212, 229, 202)" }}>
+                {" "}
+                |{" "}
+              </span>
+            </>
+          )}
+        </div>
+        <div className="rightNav">
+          {!user.id && (
+            <>
+              <Link
+                to="/signup"
+                style={{
+                  textDecoration: "none",
+                  padding: 5,
+                  cursor: "pointer",
+                  color: "rgb(212, 229, 202)",
+                }}
+              >
+                Sign up
+              </Link>
+              <span style={{ padding: 5, color: "rgb(212, 229, 202)" }}>
+                {" "}
+                |{" "}
+              </span>
+            </>
+          )}
+          {!user.id && (
+            <>
+              <Link
+                to="/login"
+                style={{
+                  textDecoration: "none",
+                  padding: 5,
+                  cursor: "pointer",
+                  color: "rgb(212, 229, 202)",
+                }}
+              >
+                Login
+              </Link>
+              <span style={{ padding: 5, color: "rgb(212, 229, 202)" }}>
+                {" "}
+                |{" "}
+              </span>
+            </>
+          )}
+
+          {user.id && (
+            <span
+              onClick={handleLogOut}
+              style={{
+                padding: 5,
+                cursor: "pointer",
+                color: "rgb(212, 229, 202)",
+              }}
+            >
+              Logout
+            </span>
+          )}
+        </div>
       </nav>
       <Routes>
         <Route
@@ -103,6 +267,10 @@ const App = () => {
               setStateSource={setStateSource}
               completedHikes={completedHikes}
               setCompletedHikes={setCompletedHikes}
+              // hikesShown={hikesShown}
+              // setHikesShown={setHikesShown}
+              // hikesResult={hikesResult}
+              // setHikeResult={setHikeResult}
             />
           }
         />
@@ -114,6 +282,10 @@ const App = () => {
               savedHikes={savedHikes}
               setSavedHikes={setSavedHikes}
               stateSource={stateSource}
+              // hikesShown={hikesShown}
+              // setHikesShown={setHikesShown}
+              shownHikesSaved={shownHikesSaved}
+              setShownHikesSaved={setShownHikesSaved}
             />
           }
         />
@@ -124,6 +296,10 @@ const App = () => {
               user={user}
               completedHikes={completedHikes}
               setCompletedHikes={setCompletedHikes}
+              // hikesShown={hikesShown}
+              // setHikesShown={setHikesShown}
+              shownHikesComp={shownHikesComp}
+              setShownHikesComp={setShownHikesComp}
             />
           }
         />

@@ -14,21 +14,73 @@ function HikeDetails({
   // console.log("onSAVED: ", onSavedPage);
   // console.log("summary: ", hike.shortdescription);
   return (
-    <div>
-      <div>{hike.title}</div>
+    <div className="hikeDetails">
+      <div
+        className="detailEntry"
+        style={{ fontWeight: "bold", fontSize: "20px" }}
+      >
+        {hike.title}
+      </div>
       {/* <div>park: {hike.relatedParks[0].fullName}</div> */}
-      <div>park: {parkSource}</div>
-      <div>state: {hikeState}</div>
-      <div>summary: {hike.shortDescription}</div>
-      <div>summary_long: {hike.longDescription}</div>
-      <div>duration: {hike.duration}</div>
-      <div>pets: {hike.arePetsPermitted}</div>
-      <div>pets_info: {hike.petsDescription}</div>
-      <div>reservation: {hike.isReservationRequired}</div>
-      <div>fee: {hike.doFeesApply}</div>
-      <div>fee_info: {hike.feeDescription}</div>
-      <div> age: {hike.age}</div>
-      <button onClick={closeModal}>close</button>
+      <div className="detailEntry">
+        <span style={{ fontWeight: "bold" }}>Park:</span>{" "}
+        <span>{parkSource}</span>
+      </div>
+      <div className="detailEntry">
+        <span style={{ fontWeight: "bold" }}>State:</span>{" "}
+        <span>{hikeState}</span>
+      </div>
+      <div className="detailEntry">
+        {" "}
+        <span style={{ fontWeight: "bold" }}>Summary:</span>{" "}
+        <span>{hike.shortDescription}</span>
+      </div>
+      <div className="detailEntry">
+        <span style={{ fontWeight: "bold" }}>Summary long:</span>{" "}
+        <span>{hike.longDescription}</span>
+      </div>
+      <div className="detailEntry">
+        <span style={{ fontWeight: "bold" }}>Duration:</span>{" "}
+        <span>{hike.duration}</span>
+      </div>
+      <div className="detailEntry">
+        <span style={{ fontWeight: "bold" }}>Pets:</span>{" "}
+        <span>{hike.arePetsPermitted === "true" ? "Yes" : "No"}</span>
+      </div>
+      <div className="detailEntry">
+        <span style={{ fontWeight: "bold" }}>Pets info:</span>{" "}
+        <span>{hike.petsDescription}</span>
+      </div>
+      <div className="detailEntry">
+        <span style={{ fontWeight: "bold" }}>Reservation:</span>
+        <span>{hike.isReservationRequired === "true" ? "Yes" : "No"}</span>
+      </div>
+      <div className="detailEntry">
+        <span style={{ fontWeight: "bold" }}>Fees:</span>{" "}
+        <span>{hike.doFeesApply === "true" ? "Yes" : "No"}</span>
+      </div>
+      <div className="detailEntry">
+        <span style={{ fontWeight: "bold" }}>Fee info:</span>{" "}
+        <span>{hike.feeDescription}</span>
+      </div>
+      <div className="detailEntry">
+        <span style={{ fontWeight: "bold" }}>Age:</span> <span>{hike.age}</span>
+      </div>
+      <button
+        onClick={closeModal}
+        style={{
+          borderColor: "#094406",
+          borderWidth: "1px",
+          borderRadius: "20px",
+          backgroundColor: "white",
+          color: "#094406",
+          fontSize: "18px",
+          marginTop: "20px",
+          marginBottom: "0px",
+        }}
+      >
+        X Close
+      </button>
       {/* <div>{hike.duration}</div> <button onClick={closeModal}>close</button> */}
     </div>
   );

@@ -12,12 +12,18 @@ function Filter({
   setClickedFilters,
   filters,
   setFilters,
+  hikesShown2,
+  setHikesShown2,
 }) {
   const [clickedModal, setClickedModal] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [allFilters, setAllFilters] = useState(["Pets Allowed", "No Fees"]);
   const [filtersObj, setFiltersObj] = useState({});
   const [filterOn, setFilterOn] = useState(false);
+  // const [hikesShown2, setHikesShown2] = useState(() => {
+  //   return hikesShown.flat();
+  // });
+  // console.log("HIKES SHOWN 2: ", hikesShown2);
 
   const createFiltersObj = () => {
     setFiltersObj(
@@ -60,19 +66,41 @@ function Filter({
   const closeModal = () => {
     setModalOpen(false);
   };
+  const hikesArray2 = () => {
+    let res = [];
+    let sameArr = [hikesShown2[0]];
+    if (hikesShown2.length > 0) {
+      for (let i = 1; i < hikesShown2.length; i++) {
+        if (
+          hikesShown2[i].relatedParks[0].fullName ===
+          hikesShown2[i - 1].relatedParks[0].fullName
+        ) {
+          sameArr.push(hikesShown2[i]);
+          // sameArr.push(hikesShown2[i].relatedParks[0].fullName);
+        } else {
+          res.push(sameArr);
+          sameArr = [];
+          sameArr.push(hikesShown2[i]);
+          // sameArr.push(hikesShown2[i].relatedParks[0].fullName);
+        }
+      }
+      res.push(sameArr);
+    }
+    setHikesShown(res);
+  };
 
   const handleFilterBy = () => {
     for (let filt of filters) {
       if (filt === "Pets Allowed") {
-        setHikesShown(
-          hikesShown.filter((hike) => {
+        setHikesShown2(
+          hikesShown2.filter((hike) => {
             return hike["arePetsPermitted"] === "true";
           })
         );
       }
       if (filt === "No Fees") {
-        setHikesShown(
-          hikesShown.filter((hike) => {
+        setHikesShown2(
+          hikesShown2.filter((hike) => {
             return hike.doFeesApply === "false";
           })
         );
@@ -91,7 +119,8 @@ function Filter({
   };
 
   const removeAllFilters = () => {
-    setHikesShown(hikesResult);
+    setHikesShown2(hikesResult);
+    hikesArray2();
     setFilterApplied(false);
     setFilters([]);
     setClickedFilters([false, false]);
@@ -105,11 +134,12 @@ function Filter({
     setFilters(newFilters);
     if (filters.length < 1) {
       setFilterApplied(false);
-      setHikesShown(hikesResult);
+      setHikesShown2(hikesResult);
+      hikesArray2();
     }
     if (value === "Pets Allowed") {
-      let newHikes = hikesShown.concat(filtersObj.pets);
-      setHikesShown(
+      let newHikes = hikesShown2.concat(filtersObj.pets);
+      setHikesShown2(
         newHikes.sort(
           (a, b) =>
             // a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
@@ -119,10 +149,11 @@ function Filter({
         )
         // .sort((a, b) => (a.title > b.title ? 1 : -1))
       );
+      hikesArray2();
     }
     if (value === "No Fees") {
-      let newHikes = hikesShown.concat(filtersObj.fees);
-      setHikesShown(
+      let newHikes = hikesShown2.concat(filtersObj.fees);
+      setHikesShown2(
         newHikes.sort(
           (a, b) =>
             // a.relatedParks[0].fullName > b.relatedParks[0].fullName ? 1 : -1
@@ -132,19 +163,37 @@ function Filter({
         )
         // .sort((a, b) => (a.title > b.title ? 1 : -1))
       );
+      hikesArray2();
     }
     const ind = allFilters.indexOf(value);
     handleClickeFilter(ind);
   };
 
-  useEffect(() => {}, [hikesShown]);
+  // useEffect(() => {
+  //   // if (Array.isArray(hikesShown[0])) {
+  //   // setHikesShown2(hikesShown);
+  //   // }
+  // }, [hikesShown]);
   useEffect(() => {
     handleFilterBy();
   }, [filters]);
+
+  useEffect(() => {
+    // setHikesShown(hikesShown2);
+    hikesArray2();
+  }, [hikesShown2]);
+
   // useEffect(() => {}, [savedHikes]);
   // console.log("FILTER: ", filters);
   // console.log("HIKES SHOWN: ", hikesShown);
+  // console.log("----> HIKES SHOWN 2: ", hikesShown2);
 
+  /////////// IMPORTANT //////////
+  //!!!!!!!!!!!!!!!!!!!
+  // When searching for a ne state, HikesShown2 doesn not get updated, it remains the previous state's array
+  // Filters seem to be working fine
+  ///////////
+  //!!!!!!!!!!!!!!!!!!!
   return (
     <div>
       <button onClick={handleClickModal}>Filter</button>

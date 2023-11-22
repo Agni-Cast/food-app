@@ -174,7 +174,7 @@ app.post("/saved-hikes", async (req, res) => {
 app.get("/saved-hikes", async (req, res) => {
   // console.log(req.query);
   const dbQuery = await db.query(
-    "SELECT * FROM hikes WHERE user_id=$1 ORDER BY state ASC",
+    `SELECT * FROM hikes WHERE user_id=$1 ORDER BY state ASC, "parkSource" ASC`,
     [req.query.user_id]
   );
   // console.log(dbQuery.rows);
