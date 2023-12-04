@@ -15,6 +15,20 @@ function Saved({
 }) {
   const [remove, setRemove] = useState(true);
   const [onSavedPage, setOnSavedPage] = useState(true);
+  const [statesArray, setStatesArray] = useState([]);
+  // useEffect(() => {
+  //   let arr = [];
+  //   for (let hike of savedHikes) {
+  //     arr.push(hike.state);
+  //   }
+  //   setStatesArray(arr);
+  // }, [savedHikes]);
+  // console.log("statesArray: ", statesArray);
+
+  const checkPrevState = () => {};
+
+  ////////////////////////////////////////////////////////////////////////////////////
+
   // const [shownHikesSaved, setShownHikesSaved] = useState(savedHikes);
   // console.log("SAVED HIKES: ", savedHikes);
   // console.log("ONSAVED: ", onSavedPage);
@@ -62,11 +76,12 @@ function Saved({
   // console.log("Shown Hikes: ", hikesShown);
   return (
     <div className="saved">
-      <div>Saved</div>
+      <div className="headerSaved">Your Saved Hikes</div>
       {shownHikesSaved.length > 0
         ? shownHikesSaved.map((stateArr, index) => {
             return (
-              <div key={index}>
+              <div className="hikeStateSaved" key={index}>
+                <div className="stateSaved">{stateArr[0][0].state}</div>
                 {/* <div style={{ fontSize: "35px" }}>
                   {index === 0 ? hike.state : null}
                 </div>
@@ -90,16 +105,18 @@ function Saved({
                       {parkArr.map((hike, hikeIndex) => {
                         let savedHikeIndex = savedHikes.indexOf(hike);
                         return (
-                          <div className="hikeCardSaved" key={hikeIndex}>
-                            <SingleHike
-                              hike={hike}
-                              prevHike={savedHikes[savedHikeIndex - 1]}
-                              remove={remove}
-                              user={user}
-                              setSavedHikes={setSavedHikes}
-                              onSavedPage={onSavedPage}
-                              shownHikesSaved={shownHikesSaved}
-                            />
+                          <div>
+                            <div className="hikeCardSaved" key={hikeIndex}>
+                              <SingleHike
+                                hike={hike}
+                                prevHike={savedHikes[savedHikeIndex - 1]}
+                                remove={remove}
+                                user={user}
+                                setSavedHikes={setSavedHikes}
+                                onSavedPage={onSavedPage}
+                                shownHikesSaved={shownHikesSaved}
+                              />
+                            </div>
                           </div>
                         );
                       })}

@@ -251,7 +251,7 @@ function SingleHike({
     <div className="hikeCardInside">
       <div style={{ fontSize: "25px" }}>
         {/* {onSavedPage && hikeState !== prevPark ? prevState : null} */}
-        {onSavedPage && hikeState !== prevState ? hikeState : null}
+        {/* {onSavedPage && hikeState !== prevState ? hikeState : null} */}
         {onCompletedPage && hikeState !== prevState ? hikeState : null}
       </div>
       <div style={{ fontSize: "20px", height: "20px" }}>

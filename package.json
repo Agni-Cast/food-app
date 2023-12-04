@@ -33,9 +33,11 @@
     "bcrypt": "^5.1.0",
     "connect-pg-simple": "^9.0.0",
     "crypto": "^1.0.1",
+    "css-loader": "^6.8.1",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
+    "file-loader": "^6.2.0",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
@@ -45,6 +47,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.11.0",
     "react-modal": "^3.16.1",
-    "react-router-dom": "^6.14.2"
+    "react-router-dom": "^6.14.2",
+    "style-loader": "^3.3.3"
   }
 }

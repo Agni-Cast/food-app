@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Modal from "react-modal";
 import FilterButtons from "./FilterButtons.jsx";
+import { IoFilter } from "react-icons/io5";
+import { TiDelete } from "react-icons/ti";
 
 function Filter({
   clickedFilters,
@@ -196,54 +198,94 @@ function Filter({
   //!!!!!!!!!!!!!!!!!!!
   return (
     <div>
-      <button onClick={handleClickModal}>Filter</button>
+      <button
+        className="filterBtnHome"
+        onClick={handleClickModal}
+        style={{ display: "flex" }}
+      >
+        {" "}
+        <IoFilter style={{ marginRight: "5px" }} /> Filter
+      </button>
       {clickedModal === true ? (
         <Modal
           isOpen={modalOpen}
           onRequestClose={closeModal}
           ariaHideApp={false}
+          style={{
+            overlay: {
+              position: "fixed",
+
+              backgroundColor: "rgba(255, 255, 255, 0.75)",
+            },
+            content: {
+              fontFamily: "helvetica",
+              position: "absolute",
+              top: "40px",
+              left: "40px",
+              right: "40px",
+              bottom: "40px",
+              border: "1px solid #094406",
+              background: "#fff",
+              overflow: "auto",
+              borderRadius: "20px",
+              borderWidth: "2px",
+              outline: "none",
+              padding: "20px",
+              height: "100px",
+            },
+          }}
         >
-          Filter by:
-          {allFilters.map((filter, index) => {
-            return (
-              <div>
-                <FilterButtons
-                  key={index}
-                  filter={filter}
-                  removeFilter={removeFilter}
-                  handleSetFilters={handleSetFilters}
-                  clickedFilters={clickedFilters}
-                  setClickedFilters={setClickedFilters}
-                  index={index}
-                  handleClickeFilter={handleClickeFilter}
-                />
-              </div>
-            );
-          })}
-          <button onClick={closeModal}>Show results</button>
-        </Modal>
-      ) : null}
-      <div>
-        {filters.length > 0 ? (
-          <div>
-            <div>
-              {filters.map((oneFilter, index) => {
+          <div className="filterBy">
+            Filter by:
+            <div className="filterBtns">
+              {allFilters.map((filter, index) => {
                 return (
-                  <button
-                    key={index}
-                    onClick={() => removeFilter(event.target.value)}
-                    key={index}
-                    value={oneFilter}
-                  >
-                    x {oneFilter}
-                  </button>
+                  <div>
+                    <FilterButtons
+                      key={index}
+                      filter={filter}
+                      removeFilter={removeFilter}
+                      handleSetFilters={handleSetFilters}
+                      clickedFilters={clickedFilters}
+                      setClickedFilters={setClickedFilters}
+                      index={index}
+                      handleClickeFilter={handleClickeFilter}
+                    />
+                  </div>
                 );
               })}
             </div>
-            <button onClick={removeAllFilters}>Clear all</button>
           </div>
-        ) : null}
-      </div>
+          <button className="showFilterBtn" onClick={closeModal}>
+            Show results
+          </button>
+        </Modal>
+      ) : null}
+      {/* <div > */}
+      {filters.length > 0 ? (
+        <div className="filtersInfo">
+          <div className="filtersApplied">
+            {filters.map((oneFilter, index) => {
+              return (
+                <button
+                  className="filterValue"
+                  key={index}
+                  onClick={() => removeFilter(event.target.value)}
+                  key={index}
+                  value={oneFilter}
+                >
+                  <TiDelete style={{ marginRight: "2px" }} />
+                  {oneFilter}
+                </button>
+              );
+            })}
+          </div>
+          <button className="clearAll" onClick={removeAllFilters}>
+            Clear all
+          </button>
+        </div>
+      ) : null}
+      {/* </div> */}
     </div>
   );
 }

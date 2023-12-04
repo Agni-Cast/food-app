@@ -33,10 +33,10 @@ function Login({ user, setUser }) {
         });
         if (res.data === "NO USER" || res.data === "INCORRECT PASSWORD") {
           setInputError(true);
-          // setErrorMessage("Incorrect Username or Password");
+          setErrorMessage("Incorrect Username or Password");
         } else {
           setInputError(false);
-          // setErrorMessage("");
+          setErrorMessage("No Error");
         }
       }
     } catch (error) {
@@ -48,7 +48,7 @@ function Login({ user, setUser }) {
       navigate("/");
     }
   }, [user]);
-  // console.log("ERROR MESSAGE: ", errorMessage);
+  console.log("ERROR MESSAGE: ", errorMessage);
   // console.log("Login: ", username, password);
 
   return (

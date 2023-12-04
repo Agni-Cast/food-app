@@ -11,15 +11,38 @@ function Completed({
   setShownHikesComp,
 }) {
   const [onCompletedPage, setOnCompletedPage] = useState(true);
-
+  const countParks = () => {
+    let count = 0;
+    for (let state of shownHikesComp) {
+      for (let park of state) {
+        count += 1;
+      }
+    }
+    return count;
+  };
   /////////
   return (
     <div className="completed">
-      <div>Completed</div>
+      <div className="headerCompleted">Your Completed Hikes</div>
+      <div className="statsCont">
+        <div className="statsHeader">Your Stats</div>
+        <div className="statsRes">
+          <div className="stat">
+            Total Hikes: <span className="num"> {completedHikes.length}</span>
+          </div>
+          <div className="stat">
+            States Visited: <span className="num">{shownHikesComp.length}</span>
+          </div>
+          <div className="stat">
+            Parks Visited: <span className="num">{countParks()}</span>
+          </div>
+        </div>
+      </div>
       {shownHikesComp.length > 0
         ? shownHikesComp.map((stateArr, index) => {
             return (
-              <div key={index}>
+              <div className="hikeStateComp" key={index}>
+                <div className="stateComp">{stateArr[0][0].state}</div>
                 {/* <div style={{ fontSize: "35px" }}>
                   {index === 0 ? hike.state : null}
                 </div>

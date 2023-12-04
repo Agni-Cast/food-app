@@ -3,6 +3,14 @@ import axios from "axios";
 import SingleHike from "./SingleHike.jsx";
 import HikeDetails from "./HikeDetails.jsx";
 import Filter from "./Filter.jsx";
+import { GrSearch } from "react-icons/gr";
+import { FaChevronLeft } from "react-icons/fa6";
+import { FaChevronRight } from "react-icons/fa6";
+import image1 from "../../dist/images/image1.png";
+import image2 from "../../dist/images/image2.jpg";
+import image3 from "../../dist/images/image3.jpg";
+import image4 from "../../dist/images/image4.jpg";
+import image5 from "../../dist/images/image5.jpg";
 
 function Home({
   user,
@@ -147,6 +155,33 @@ function Home({
   // console.log("HIKES SHOWN: ", hikesShown);
   console.log("Hikes Result: ", hikesResult);
 
+  const imagesArr = [image1, image2, image3, image4, image5];
+  const [imageIndex, setImageIndex] = useState(0);
+  const changeIndexRight = () => {
+    if (imageIndex === 4) {
+      setImageIndex(0);
+    } else {
+      setImageIndex(imageIndex + 1);
+    }
+  };
+  const changeIndexLeft = () => {
+    if (imageIndex === 0) {
+      setImageIndex(4);
+    } else {
+      setImageIndex(imageIndex - 1);
+    }
+  };
+  console.log("imageIndex: ", imageIndex);
+  // useEffect(() => {}, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      {
+        changeIndexRight();
+      }
+    }, 4000);
+    return () => clearInterval(interval);
+  });
+
   // console.log("STATE HOME: ", stateSource);
   // console.log("SearchInput: ", searchInput);
   // console.log("StateSource: ", stateSource);
@@ -159,31 +194,50 @@ function Home({
     <div className="home">
       <div
         className="headerHome"
-        style={{ marginLeft: "5px", marginTop: "15px", marginBottom: "15px" }}
+        // style={{ marginLeft: "5px", marginTop: "15px", marginBottom: "15px" }}
       >
-        <div>Home</div>
-        <input
-          onChange={handleInputChange}
-          placeholder="Search for a trail, National Park, or State ..."
-          value={searchInput}
-          onKeyDown={handleKeyDown}
-        ></input>
-        <button onClick={handleSubmit} action="submit">
-          Go!
+        {/* <div>Home</div> */}
+        {/* <img className="imgHome" src={imageIndex} /> */}
+        {/* <div className="img&btn"> */}
+        <button className="homeImgButtonLeft" onClick={changeIndexLeft}>
+          {" "}
+          <FaChevronLeft />{" "}
         </button>
-        <div>
+        <img className="imgHome" src={imagesArr[imageIndex]} />
+        <button className="homeImgButtonRight" onClick={changeIndexRight}>
+          <FaChevronRight />
+        </button>
+        {/* </div> */}
+        <div className="searchGo">
+          <input
+            className="search"
+            onChange={handleInputChange}
+            placeholder="Search for a trail, National Park, or State ..."
+            value={searchInput}
+            onKeyDown={handleKeyDown}
+          ></input>
+          <button className="goBtn" onClick={handleSubmit} action="submit">
+            <GrSearch />
+          </button>
+        </div>
+      </div>
+      <div className="headerInfo">
+        <div style={{ display: "flex" }}>
           {/* only works when a state has already been searched, doesn't work at login */}
           {hikesShown.length > 0 ? (
             <div>
               {/* {hikesShown.length}  */}
               {countHikes()} hikes in
-              {stateSource.length > 0
-                ? stateSource
-                : hikesResult[0].relatedParks[0].states}
+              <span style={{ marginLeft: "5px" }}>
+                {stateSource.length > 0
+                  ? stateSource
+                  : hikesResult[0].relatedParks[0].states}
+              </span>
             </div>
           ) : null}
         </div>
         <Filter
+          style={{ display: "flex" }}
           hikesResult={hikesResult}
           hikesShown={hikesShown}
           setHikesShown={setHikesShown}

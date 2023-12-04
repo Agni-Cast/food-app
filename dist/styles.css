@@ -1,186 +1,34 @@
-/* .modal {
-  position: fixed;
-  inset: 54px;
-  background-color: rgba(255, 255, 255, 0.85);
-  width: 700px;
-  height: 600px;
-  overflow: auto;
-} */
-/* .innerModal {
-  border: 1px solid black;
-  padding: 40px;
-  border-radius: 20px;
-} */
-.header {
-  /* display: grid;
-  grid-template-columns: 25% 25% 25% 25%; */
-  /* position: fixed; */
-  /* font-family: Helvetica; */
-  margin-left: 5px;
-}
-/*
-#DAF7A6  
-#094406
-*/
-.allHikes {
-  /* margin-left: 50px;
-  margin-right: 50px;
-  background-color: white; */
-}
-
-.hikesParkHome,
-.hikeParkSaved,
-.hikeParkComp {
-  /* display: grid;
-  grid-template-columns: 25% 25% 25% 25%; */
-  /* grid-template-rows: auto; */
-
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  align-items: flex-end;
-  margin-left: 60px;
-  margin-right: 60px;
-  margin-top: 20px;
-  padding-left: 20px;
-  /* margin-left: 50px; */
-  /* margin-right: 50px; */
-  background-color: white;
-  border-radius: 20px;
-
-  /* justify-content: space-around; */
-}
-
-.restOfRow {
-  /* flex-grow: 1; */
-}
-.break {
-  /* width: 100%;
-  height: 0; */
-
-  /* margin-right: 600px; */
-  /* grid-column-start: span 4; */
-}
-.hikeCard,
-.hikeCardSaved,
-.hikeCardComp {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  justify-content: flex-start;
-  /* height: 500px;
-  width: 300px; */
-  padding: 5px;
-  margin: 20px;
-  /* margin-top: 10px; */
-  /* margin-left: -210px; */
-}
-.hikeCardInside:hover {
-  /* box-shadow: 3px 3px;
-   */
-  /* transform: scale(1.1); */
-}
-.imgCompleted {
-  font-size: 5px;
-}
-
-.imgHomeSaved {
-  font-size: 50px;
-}
-
-.image {
-  border-radius: 10px;
-}
-.image:hover {
-  transform: scale(1.1);
-}
-
-.navigation {
-  font-family: Arial, Helvetica, sans-serif;
-  background-color: #094406;
-  /* margin-top: 20px; */
-  /* margin-left: 50px; */
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  height: 50px;
-  /* color: "#DAF7A6"; */
-}
-.leftNav {
-  display: flex;
-  flex-direction: row;
-  width: 650px;
-  margin-left: 50px;
-  justify-content: space-between;
-  /* color: "#DAF7A6"; */
-}
-
-.rightNav {
-  display: flex;
-  flex-direction: row;
-  width: 200px;
-  justify-content: flex-end;
-  /* color: "#DAF7A6"; */
-}
-
-a:hover {
-  color: red;
-}
-
-.home,
-.saved,
-.completed {
-  font-family: Arial, Helvetica, sans-serif;
-  /* margin-left: 50px;
-  margin-right: 50px;
-  background-color: white; */
-}
-
-.hikeDetails {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #171717;
-}
-
-.detailEntry {
-  margin-top: 5px;
-  margin-bottom: 5px;
-}
-
-.buttons {
-  border-color: rgb(9, 68, 6);
-  border-width: 0px;
-  border-radius: 20px;
-  /* background-color: #e1fadf; */
-  background-color: rgb(212, 229, 202, 0.5);
-  color: rgb(9, 68, 6);
-  font-size: 18px;
-  margin-right: 4px;
-  margin-left: 8px;
-  /* display: flex;
-  height: 25px; */
-}
-
 #root {
   /* background-color: rgb(203, 229, 202, 0.3); */
-  background-color: rgb(212, 229, 202, 0.5);
+  /* background-color: rgb(212, 229, 202, 0.5); */
   /* background-color: rgb(36, 92, 28, 0.3); */
   /* background-color: rgb(254, 251, 248) */
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
 }
 html,
 body,
 #root {
-  height: 100%;
+  /* height: 100%; */
+}
+body {
+  min-height: 100vh;
+  background-color: rgb(212, 229, 202, 0.5);
+  margin: 0px;
+  margin-top: 0px;
+  margin-right: 0px;
+  /* margin-bottom: 25px; */
 }
 
 .loginContainer,
 .signupContainer {
-  margin-left: 500px;
-  margin-right: 500px;
+  /* margin-left: 500px;
+  margin-right: 500px; */
   font-family: Arial, Helvetica, sans-serif;
+  /* background-color: rgb(212, 229, 202, 0.5); */
+  height: 100%;
+  margin-top: 50px;
 }
 .login,
 .signup {
@@ -193,6 +41,8 @@ body,
   /* margin-left: 450px;
   margin-right: 450px; */
   /* padding: 41px; */
+  margin-left: 500px;
+  margin-right: 500px;
   border-radius: 20px;
   background-color: white;
   box-shadow: 5px 5px 10px gray;
@@ -203,7 +53,7 @@ body,
   display: flex;
   height: 50px;
   width: 100%;
-  margin-top: 50px;
+  /* margin-top: 50px; */
   /* background-color: #094406; */
   /* color: rgb(212, 229, 202); */
   color: #094406;
@@ -261,4 +111,373 @@ body,
   align-items: center;
 
   margin: 20px;
+}
+/* .modal {
+  position: fixed;
+  inset: 54px;
+  background-color: rgba(255, 255, 255, 0.85);
+  width: 700px;
+  height: 600px;
+  overflow: auto;
+} */
+/* .innerModal {
+  border: 1px solid black;
+  padding: 40px;
+  border-radius: 20px;
+} */
+.home,
+.saved,
+.completed {
+  font-family: Arial, Helvetica, sans-serif;
+  /* height: 100%; */
+  /* background-color: rgb(212, 229, 202, 0.5); */
+  /* margin-left: 50px;
+  margin-right: 50px;
+  background-color: white; */
+  display: flex;
+  flex-direction: column;
+}
+
+.headerHome {
+  /* display: grid;
+  grid-template-columns: 25% 25% 25% 25%; */
+  position: relative;
+  /* font-family: Helvetica; */
+  /* margin-left: 60px;
+  margin-right: 60px; */
+
+  display: flex;
+  flex-direction: column;
+}
+.imgHome {
+  height: 450px;
+  object-fit: fill;
+  /* width: 900px; */
+  /* display: flex; */
+  margin-right: 150px;
+  margin-left: 150px;
+  margin-top: 50px;
+  border-radius: 20px;
+}
+.homeImgButtonRight {
+  position: absolute;
+  top: 240px;
+  right: 170px;
+  display: flex;
+  height: 25px;
+  width: 25px;
+  align-items: center;
+  justify-content: center;
+  background-color: #b3b3b3;
+  color: white;
+  border-width: 0px;
+  border-radius: 20px;
+}
+.homeImgButtonLeft {
+  position: absolute;
+  top: 240px;
+  left: 170px;
+  display: flex;
+  height: 25px;
+  width: 25px;
+  align-items: center;
+  justify-content: center;
+  background-color: #b3b3b3;
+  color: white;
+  border-width: 0px;
+  border-radius: 20px;
+}
+.headerSaved,
+.headerCompleted {
+  display: flex;
+  justify-content: center;
+  height: 100px;
+  align-items: center;
+  font-size: 20px;
+}
+.headerInfo {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+  margin-right: 80px;
+  margin-left: 80px;
+  margin-top: 50px;
+}
+/*
+#DAF7A6  
+#094406
+*/
+.hikeCard,
+.hikeCardSaved,
+.hikeCardComp {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  /* height: 500px;
+  width: 300px; */
+  padding: 5px;
+  margin: 20px;
+  /* margin-top: 10px; */
+  /* margin-left: -210px; */
+}
+.allHikes {
+  /* margin-left: 50px;
+  margin-right: 50px;
+  background-color: white; */
+}
+
+.hikeStateSaved,
+.hikeStateComp {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(212, 229, 202, 0.5);
+  border-radius: 20px;
+  margin-right: 50px;
+  margin-left: 50px;
+  margin-bottom: 20px;
+}
+.stateSaved,
+.stateComp {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+  font-size: 18px;
+}
+
+.hikesParkHome,
+.hikeParkSaved,
+.hikeParkComp {
+  /* display: grid;
+  grid-template-columns: 25% 25% 25% 25%; */
+  /* grid-template-rows: auto; */
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  margin-left: 60px;
+  margin-right: 60px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-left: 20px;
+  /* margin-left: 50px; */
+  /* margin-right: 50px; */
+  background-color: white;
+  border-radius: 20px;
+
+  /* justify-content: space-around; */
+}
+
+.navigation {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #094406;
+  /* margin-top: 20px; */
+  /* margin-left: 50px; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+  /* color: "#DAF7A6"; */
+}
+.leftNav {
+  display: flex;
+  flex-direction: row;
+  width: 650px;
+  margin-left: 50px;
+  justify-content: space-between;
+  /* color: "#DAF7A6"; */
+}
+
+.rightNav {
+  display: flex;
+  flex-direction: row;
+  width: 200px;
+  justify-content: flex-end;
+  /* color: "#DAF7A6"; */
+}
+
+a:hover {
+  color: red;
+}
+
+.searchGo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 50px;
+  margin-bottom: 50px;
+  align-items: center;
+  position: absolute;
+  top: 183px;
+  left: 550px;
+}
+.search {
+  display: flex;
+  border-width: 0px;
+  height: 35px;
+  width: 300px;
+  border-radius: 20px;
+  padding-left: 15px;
+  /* box-shadow: 4px 4px 5px; */
+}
+.goBtn {
+  display: flex;
+  font-size: 20px;
+  margin-left: -40px;
+  border-width: 0px;
+  background-color: rgb(9, 68, 6, 0);
+  /* border-color: #094406; */
+  border-radius: 9px;
+}
+.filterBtnHome {
+  cursor: pointer;
+  font-size: 16px;
+  border-width: 0px;
+  background-color: rgb(212, 229, 202, 0);
+  color: #094406;
+}
+.filterBy {
+}
+.filtersInfo {
+  display: flex;
+  /* height: 50px; */
+  margin-top: 20px;
+  /* margin-bottom: 5px; */
+  margin-left: -90px;
+}
+.filtersApplied {
+  display: flex;
+  /* border-radius: 20px; */
+  /* height: 25px; */
+  /* background-color: rgba(212, 229, 202, 0);
+  cursor: pointer;
+  font-size: 15px;
+  border-width: 0px;
+  color: rgb(9, 68, 6);
+  border-color: rgb(9, 68, 6);
+  margin-right: 10px; */
+}
+.filterValue,
+.clearAll {
+  display: flex;
+  align-items: center;
+  background-color: rgba(212, 229, 202, 0);
+  /* border-radius: 20px; */
+  /* height: 25px; */
+  cursor: pointer;
+  font-size: 15px;
+  border-width: 0px;
+  color: rgb(9, 68, 6);
+  border-color: rgb(9, 68, 6);
+  margin-right: 10px;
+}
+.filterBtns {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-top: 15px;
+  margin-bottom: 15px;
+}
+
+.showFilterBtn {
+  /* background-color: #094406;
+  color: white;
+  border-width: 0px; */
+  height: 30px;
+  border-radius: 10px;
+  font-size: 16px;
+
+  background-color: white;
+  color: #094406;
+  border-width: 0px;
+  border-color: #094406;
+  cursor: pointer;
+}
+
+.hikeDetails {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #171717;
+}
+
+.statsCont {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 100px;
+  margin-bottom: 25px;
+  background-color: rgb(212, 229, 202, 0.5);
+  width: 250px;
+  height: 150px;
+  border-radius: 20px;
+  box-shadow: 0px 0px 0px 0px;
+  justify-content: space-evenly;
+}
+.statsHeader {
+  margin-bottom: 10px;
+  font-size: 18px;
+}
+.stat {
+  margin-top: 5px;
+}
+.num {
+  color: #094406;
+  font-size: 20px;
+}
+.restOfRow {
+  /* flex-grow: 1; */
+}
+.break {
+  /* width: 100%;
+  height: 0; */
+
+  /* margin-right: 600px; */
+  /* grid-column-start: span 4; */
+}
+
+.hikeCardInside {
+  /* position: relative */
+}
+
+.imgCompleted {
+  font-size: 5px;
+}
+
+.imgHomeSaved {
+  font-size: 50px;
+}
+
+.image {
+  border-radius: 10px;
+}
+.image:hover {
+  transform: scale(1.1);
+}
+
+.detailEntry {
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+.buttons {
+  border-color: rgb(9, 68, 6);
+  border-width: 0px;
+  border-radius: 20px;
+  /* background-color: #e1fadf; */
+  background-color: rgb(212, 229, 202, 0.5);
+  color: rgb(9, 68, 6);
+  font-size: 18px;
+  margin-right: 4px;
+  margin-left: 8px;
+  /* display: flex;
+  height: 25px; */
+
+  /* position: absolute;
+  right: 40px;
+  top: 40px; */
 }
