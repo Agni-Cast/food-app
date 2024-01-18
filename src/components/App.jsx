@@ -17,10 +17,14 @@ import Completed from "./Completed.jsx";
 
 const App = () => {
   const navigate = useNavigate();
+  const [activeComp, setActiveComp] = useState();
   const [user, setUser] = useState({});
   const [savedHikes, setSavedHikes] = useState([]);
   const [stateSource, setStateSource] = useState(
     JSON.parse(localStorage.getItem("stateSource")) || ""
+  );
+  const [stateSourceFull, setStateSourceFull] = useState(
+    JSON.parse(localStorage.getItem("stateSourceFull")) || ""
   );
   const [completedHikes, setCompletedHikes] = useState([]);
   // const [hikesResult, setHikeResult] = useState(
@@ -61,7 +65,9 @@ const App = () => {
       }
       // setHikesShown(res);
       setShownHikesSaved(res);
-      console.log("SAVED RES: ", res);
+      // console.log("SAVED RES: ", res);
+    } else {
+      setShownHikesSaved([]);
     }
   };
 
@@ -97,7 +103,9 @@ const App = () => {
       }
       // setHikesShown(res);
       setShownHikesComp(res);
-      console.log("COMP RES: ", res);
+      // console.log("COMP RES: ", res);
+    } else {
+      setShownHikesComp([]);
     }
   };
 
@@ -135,8 +143,8 @@ const App = () => {
   }, [user.id]);
 
   // console.log("USER; ", user);
-  console.log("COMPLETED HIKES: ", completedHikes);
-  console.log("SHOWN completed: ", shownHikesComp);
+  // console.log("COMPLETED HIKES: ", completedHikes);
+  // console.log("SHOWN completed: ", shownHikesComp);
   // useEffect(() => {}, [savedHikes]);
   // console.log("Saved Hikes 1: ", savedHikes);
 
@@ -144,6 +152,7 @@ const App = () => {
     // shownHikesSaved(savedHikes);
     hikesArraysSaved();
   }, [savedHikes]);
+
   // console.log("Saved Hikes 2: ", savedHikes);
   // console.log("SHOWN Saved Hikes: ", shownHikesSaved);
   return (
@@ -152,6 +161,7 @@ const App = () => {
         <div className="leftNav">
           <Link
             to="/"
+            className="navHome"
             style={{
               textDecoration: "none",
               padding: 5,
@@ -165,6 +175,7 @@ const App = () => {
           {user.id && (
             <>
               <Link
+                className="navSaved"
                 to="/saved"
                 style={{
                   textDecoration: "none",
@@ -185,6 +196,7 @@ const App = () => {
             <>
               <Link
                 to="/completed"
+                className="navCompleted"
                 style={{
                   textDecoration: "none",
                   padding: 5,
@@ -265,8 +277,12 @@ const App = () => {
               setSavedHikes={setSavedHikes}
               stateSource={stateSource}
               setStateSource={setStateSource}
+              stateSourceFull={stateSourceFull}
+              setStateSourceFull={setStateSourceFull}
               completedHikes={completedHikes}
               setCompletedHikes={setCompletedHikes}
+              activeComp={activeComp}
+              setActiveComp={setActiveComp}
               // hikesShown={hikesShown}
               // setHikesShown={setHikesShown}
               // hikesResult={hikesResult}
@@ -282,10 +298,13 @@ const App = () => {
               savedHikes={savedHikes}
               setSavedHikes={setSavedHikes}
               stateSource={stateSource}
+              stateSourceFull={stateSourceFull}
               // hikesShown={hikesShown}
               // setHikesShown={setHikesShown}
               shownHikesSaved={shownHikesSaved}
               setShownHikesSaved={setShownHikesSaved}
+              activeComp={activeComp}
+              setActiveComp={setActiveComp}
             />
           }
         />
@@ -300,6 +319,8 @@ const App = () => {
               // setHikesShown={setHikesShown}
               shownHikesComp={shownHikesComp}
               setShownHikesComp={setShownHikesComp}
+              activeComp={activeComp}
+              setActiveComp={setActiveComp}
             />
           }
         />

@@ -11,13 +11,19 @@ import image2 from "../../dist/images/image2.jpg";
 import image3 from "../../dist/images/image3.jpg";
 import image4 from "../../dist/images/image4.jpg";
 import image5 from "../../dist/images/image5.jpg";
-
+import stateNames from "./states.js";
+// import Calendar from "react-calendar";
+// import Calendar from "./Calendar.jsx";
 function Home({
+  activeComp,
+  setActiveComp,
   user,
   savedHikes,
   setSavedHikes,
   stateSource,
   setStateSource,
+  stateSourceFull,
+  setStateSourceFull,
   completedHikes,
   setCompletedHikes,
   // hikesShown,
@@ -55,11 +61,43 @@ function Home({
   const handleInputChange = (event) => {
     setSearchInput(event.target.value.toUpperCase());
   };
-
   // send get request based on state searched for and sets the hikesResult array to the response data from the api
+
+  const stateToSearchFunc = () => {
+    let stateToSearch;
+    for (let key in stateNames) {
+      if (searchInput === key || searchInput === stateNames[key]) {
+        setSearchInput(stateNames[key]);
+        stateToSearch = stateNames[key];
+      }
+    }
+    return stateToSearch;
+  };
+  const stateAbbToFullFunc = (state) => {
+    // let stateToSearch;
+    // console.log("state: ", state);
+    for (let key in stateNames) {
+      if (state === stateNames[key] || state === key) {
+        setStateSourceFull(key);
+      }
+    }
+    // return stateToSearch;
+  };
+  // console.log("stateSourceFull: ", stateSourceFull);
+
   const handleSubmit = async () => {
-    if (searchInput !== "" && searchInput !== undefined) {
-      const res = await axios.get(`/thingstodo?stateCode=${searchInput}`);
+    let stateToSearch = stateToSearchFunc();
+    // for (let key in stateNames) {
+    //   if (searchInput === key) {
+    //     setSearchInput(stateNames[key]);
+    //     stateToSearch = stateNames[key];
+    //   }
+    // }
+    // stateAbbToFullFunc(searchInput);
+    // console.log("stateToSearch: ", stateToSearch);
+    // console.log("searchInput: ", searchInput);
+    if (stateToSearch !== "" && stateToSearch !== undefined) {
+      const res = await axios.get(`/thingstodo?stateCode=${stateToSearch}`);
       // setHikeResult(res.data.data);
       // res.data.data.sort((a, b) =>
       //   // console.log("PARK: ", b.relatedParks[0].fullName)
@@ -79,7 +117,8 @@ function Home({
         )
         // .sort((a, b) => (a.title > b.title ? 1 : -1))
       );
-      setStateSource(searchInput);
+      setStateSource(stateToSearch);
+      stateAbbToFullFunc(searchInput);
     }
     setFilters([]);
     setClickedFilters([false, false]);
@@ -96,6 +135,7 @@ function Home({
   useEffect(() => {
     localStorage.setItem("hikesResult", JSON.stringify(hikesResult));
     localStorage.setItem("stateSource", JSON.stringify(stateSource));
+    localStorage.setItem("stateSourceFull", JSON.stringify(stateSourceFull));
   }, [hikesResult]);
 
   // gets what is in localStorage
@@ -108,6 +148,10 @@ function Home({
     if (dataState) {
       setStateSource(dataState);
     }
+    const dataStateFull = JSON.parse(localStorage.getItem("stateSourceFull"));
+    if (dataStateFull) {
+      setStateSourceFull(dataStateFull);
+    }
   }, []);
   const countHikes = () => {
     let count = 0;
@@ -116,7 +160,7 @@ function Home({
         count += hikesShown[i].length;
       }
     }
-    console.log(count);
+    // console.log(count);
     return count;
   };
 
@@ -142,10 +186,11 @@ function Home({
     }
     setHikesShown(res);
     // setHikesShown2(hikesResult);
-    console.log("RES: ", res);
+    // console.log("RES: ", res);
   };
+
   useEffect(() => {
-    console.log("helooooooooooooooooo");
+    // console.log("helooooooooooooooooo");
     setHikesShown(hikesResult);
     setHikesShown2(hikesResult);
     // if (onHomePage && hikesResult.length > 0) {
@@ -153,7 +198,7 @@ function Home({
     // }
   }, [hikesResult]);
   // console.log("HIKES SHOWN: ", hikesShown);
-  console.log("Hikes Result: ", hikesResult);
+  // console.log("Hikes Result: ", hikesResult);
 
   const imagesArr = [image1, image2, image3, image4, image5];
   const [imageIndex, setImageIndex] = useState(0);
@@ -171,16 +216,18 @@ function Home({
       setImageIndex(imageIndex - 1);
     }
   };
-  console.log("imageIndex: ", imageIndex);
+  // console.log("imageIndex: ", imageIndex);
   // useEffect(() => {}, []);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      {
-        changeIndexRight();
-      }
-    }, 4000);
-    return () => clearInterval(interval);
-  });
+
+  // Images carousel slideshow!!!!!!!!!!
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     {
+  //       changeIndexRight();
+  //     }
+  //   }, 4000);
+  //   return () => clearInterval(interval);
+  // });
 
   // console.log("STATE HOME: ", stateSource);
   // console.log("SearchInput: ", searchInput);
@@ -221,6 +268,7 @@ function Home({
           </button>
         </div>
       </div>
+      {/* <Calendar /> */}
       <div className="headerInfo">
         <div style={{ display: "flex" }}>
           {/* only works when a state has already been searched, doesn't work at login */}
@@ -229,8 +277,8 @@ function Home({
               {/* {hikesShown.length}  */}
               {countHikes()} hikes in
               <span style={{ marginLeft: "5px" }}>
-                {stateSource.length > 0
-                  ? stateSource
+                {stateSourceFull.length > 0
+                  ? stateSourceFull
                   : hikesResult[0].relatedParks[0].states}
               </span>
             </div>
@@ -285,6 +333,7 @@ function Home({
                             setSavedHikes={setSavedHikes}
                             hikesShown={hikesShown}
                             stateSource={stateSource}
+                            stateSourceFull={stateSourceFull}
                             completedHikes={completedHikes}
                             setCompletedHikes={setCompletedHikes}
                           />

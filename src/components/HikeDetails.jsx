@@ -7,6 +7,7 @@ function HikeDetails({
   parkSource,
   onSavedPage /*stateSource*/,
   stateSource,
+  stateSourceFull,
   hikeState,
 }) {
   // console.log("HIKEs: ", hikesResult);

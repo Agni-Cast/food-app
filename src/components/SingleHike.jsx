@@ -5,6 +5,9 @@ import Modal from "react-modal";
 import axios from "axios";
 import { FaRegHeart, FaHeart } from "react-icons/fa6";
 import { BsCheckCircle, BsCheckCircleFill } from "react-icons/bs";
+import { FaRegCalendarDays } from "react-icons/fa6";
+import Calendar from "./Calendar.jsx";
+// import Calendar from "react-calendar";
 
 function SingleHike({
   /*hikesResult,*/
@@ -20,6 +23,7 @@ function SingleHike({
   prevHike,
   hikesShown,
   stateSource,
+  stateSourceFull,
   onCompletedPage,
   completedHikes,
   setCompletedHikes,
@@ -28,9 +32,13 @@ function SingleHike({
 }) {
   // console.log("PREVIOUS HIKE: ", prevHike);
   // console.log("HIKE: ", hike);
-
+  // console.log("searchInput: ", searchInput);
   const [clickedModal, setClickedModal] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [clickedModalCal, setClickedModalCal] = useState(false);
+  const [modalOpenCal, setModalOpenCal] = useState(false);
+  const [value, onChange] = useState(hike.date || [new Date(), new Date()]);
+  const locale = "en-US";
   const [saveOrRemove, setSaveOrRemove] = useState(<FaRegHeart />);
   const [emptyHeart, setEmptyHeart] = useState(true);
   const [checkOrUnccheck, setCheckOrUncheck] = useState(<BsCheckCircle />);
@@ -49,7 +57,7 @@ function SingleHike({
     hike.parkSource || hike.relatedParks[0].fullName
   );
 
-  const [hikeState, setHikeState] = useState(hike.state || stateSource);
+  const [hikeState, setHikeState] = useState(stateSourceFull || hike.state);
   // console.log("HikeState: ", hikeState);
   // console.log("ParkSource: ", parkSource);
   const [prevPark, setPrevPark] = useState("");
@@ -82,6 +90,20 @@ function SingleHike({
   const closeModal = () => {
     setModalOpen(false);
   };
+
+  const handleClickCal = () => {
+    if (emptyHeart === false) {
+      removeHike(hike);
+    } else {
+      setClickedModalCal(true);
+      setModalOpenCal(true);
+    }
+  };
+
+  const closeModalCal = () => {
+    setModalOpenCal(false);
+  };
+
   // console.log("STATE: ", stateSource);
   const saveHike = async (hikeToSave) => {
     const data = {
@@ -90,7 +112,8 @@ function SingleHike({
       title: hikeToSave.title,
       parkSource:
         hike.relatedParks[0].fullName /*hikeToSave.relatedParks[0].states*/,
-      state: stateSource,
+      state: stateSourceFull,
+      // stateFull: stateSourceFull,
       shortDescription: hikeToSave.shortDescription,
       longDescription: hikeToSave.longDescription,
       duration: hikeToSave.duration,
@@ -101,6 +124,8 @@ function SingleHike({
       feeDescription: hikeToSave.feeDescription,
       age: hikeToSave.age,
       image: hikeToSave.images[0].url,
+      startDate: value[0],
+      endDate: value[1],
     };
     try {
       const res = await axios.post("/saved-hikes", data);
@@ -152,7 +177,7 @@ function SingleHike({
       title: hikeCommpleted.title,
       parkSource:
         hike.relatedParks[0].fullName /*hikeCommpleted.relatedParks[0].states*/,
-      state: stateSource,
+      state: stateSourceFull,
       shortDescription: hikeCommpleted.shortDescription,
       longDescription: hikeCommpleted.longDescription,
       duration: hikeCommpleted.duration,
@@ -180,6 +205,28 @@ function SingleHike({
       }
     } catch (error) {
       console.log("ERROR SAVING COMPLETED HIKE: ", error);
+    }
+  };
+
+  const updateDate = async (hike) => {
+    let hikeId = hike.hike_id;
+    // let newDate = formatDate(value);
+    console.log("hikeId: ", hikeId, "user.id: ", user.id, "value: ", value);
+    const data = {
+      hike_id: hikeId,
+      user_id: user.id,
+      startDate: value[0],
+      endDate: value[1],
+    };
+    try {
+      const res = await axios.put(`/saved-hikes`, data);
+      console.log("RETUNG DATA: ", res.data);
+      if (res.data.length > 0) {
+        setSavedHikes(res.data);
+        //   // onChange()
+      }
+    } catch (error) {
+      console.log("ERROR UPDATING DATE: ", error);
     }
   };
 
@@ -246,13 +293,22 @@ function SingleHike({
   // useEffect(() => {}, [savedHikes]);
   useEffect(() => {}, [completedHikes]);
   // const name = onCompletedPage ? "imgCompleted" : "imgHomeSaved";
+  // console.log("VALUE: ", value);
+  // console.log("HIKE: ", hike);
 
+  // const formatDate2 = (value) => {
+  //   if (value.length > 0) {
+  //     return [value[0].toDateString(), value[1].toDateString()];
+  //   }
+  // };
+  // console.log("VALUE: ", value, value[0] === value[1]);
+  // console.log("DATE FORMAT: ", formatDate2(value));
   return (
     <div className="hikeCardInside">
       <div style={{ fontSize: "25px" }}>
         {/* {onSavedPage && hikeState !== prevPark ? prevState : null} */}
         {/* {onSavedPage && hikeState !== prevState ? hikeState : null} */}
-        {onCompletedPage && hikeState !== prevState ? hikeState : null}
+        {/* {onCompletedPage && hikeState !== prevState ? hikeState : null} */}
       </div>
       <div style={{ fontSize: "20px", height: "20px" }}>
         {onHomePage && parkSource !== prevPark ? parkSource : " "}
@@ -268,18 +324,53 @@ function SingleHike({
         <div style={{ fontSize: "20px" }}>{hike.title}</div>
         <div>at</div>
         <div>{parkSource}</div>
-        <div>{hike.id}</div>
+        {/* <div>{hike.id}</div> */}
+        {onSavedPage ? <div>Scheduled date: {hike.date}</div> : null}
       </div>
       {onHomePage ? (
         <span>
           <button
             className="buttons"
-            onClick={() => handleClickButton(hike)} /*disabled={clickedSaved}*/
+            // onClick={() => handleClickButton(hike)} /*disabled={clickedSaved}*/
+            onClick={handleClickCal}
           >
             {saveOrRemove}
           </button>
         </span>
       ) : null}
+
+      {onHomePage && clickedModalCal === true ? (
+        <Modal
+          className="modalCal"
+          isOpen={modalOpenCal}
+          ariaHideApp={false}
+          onRequestClose={closeModalCal}
+          style={{
+            content: { width: "300px", inset: "155px" },
+          }}
+        >
+          <Calendar onHomePage={onHomePage} value={value} onChange={onChange} />
+          <div className="buttonsCalCont">
+            <button
+              className="buttonsCal"
+              onClick={() => {
+                saveHike(hike), closeModalCal();
+              }}
+            >
+              Save Date
+            </button>
+            <button
+              className="buttonsCal"
+              onClick={() => {
+                saveHike(hike), closeModalCal();
+              }}
+            >
+              Not Sure
+            </button>
+          </div>
+        </Modal>
+      ) : null}
+
       {onHomePage ? (
         <span>
           <button
@@ -290,6 +381,73 @@ function SingleHike({
           </button>
         </span>
       ) : null}
+      {remove ? (
+        <span>
+          <button className="buttons" onClick={() => removeHike(hike)}>
+            <FaHeart />
+          </button>
+        </span>
+      ) : null}
+      {onSavedPage ? (
+        <span>
+          <button
+            className="calIcon"
+            onClick={() => {
+              setClickedModalCal(true);
+              setModalOpenCal(true);
+            }}
+          >
+            <FaRegCalendarDays />
+          </button>
+        </span>
+      ) : null}
+      {onSavedPage && clickedModalCal === true ? (
+        <Modal
+          className="modalCal"
+          isOpen={modalOpenCal}
+          ariaHideApp={false}
+          onRequestClose={closeModalCal}
+          style={{
+            content: {
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "300px",
+              inset: "155px",
+            },
+          }}
+        >
+          <Calendar
+            onSavedPage={onSavedPage}
+            hike={hike}
+            value={value}
+            onChange={onChange}
+            updateDate={updateDate}
+          />
+          <div className="buttonsCalCont">
+            <button
+              className="buttonsCal"
+              onClick={() => {
+                updateDate(hike);
+                closeModalCal();
+              }}
+            >
+              Change Date
+            </button>
+            <button
+              className="buttonsCal"
+              onClick={() => {
+                closeModalCal();
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </Modal>
+      ) : null}
+      {/* <FaRegCalendarDays onClick={handleClickCal}></FaRegCalendarDays> */}
+
       {/* line below is ok, only runs from Saved page, no need to modify */}
       {onCompletedPage ? (
         <span>
@@ -298,53 +456,47 @@ function SingleHike({
           </button>
         </span>
       ) : null}
-      {remove ? (
-        <span>
-          <button className="buttons" onClick={() => removeHike(hike)}>
-            <FaHeart />
-          </button>
-        </span>
-      ) : null}
+
       {clickedModal === true ? (
         <Modal
           className="modal"
           isOpen={modalOpen}
           ariaHideApp={false}
           onRequestClose={closeModal}
-          style={{
-            overlay: {
-              position: "fixed",
-              // inset: 55,
-              // top: 0,
-              // left: 0,
-              // right: 0,
-              // bottom: 0,
-              backgroundColor: "rgba(255, 255, 255, 0.75)",
-            },
-            content: {
-              position: "absolute",
-              top: "40px",
-              left: "40px",
-              right: "40px",
-              bottom: "40px",
-              border: "1px solid #094406",
-              background: "#fff",
-              overflow: "auto",
-              // WebkitOverflowScrolling: "touch",
-              borderRadius: "20px",
-              borderWidth: "2px",
-              outline: "none",
-              padding: "20px",
-            },
-            // overlay: {
-            //   position: "fixed",
-            //   inset: "54px",
-            //   backgroundColor: "rgba(255, 255, 255, 0.85)",
-            //   width: "700px",
-            //   height: "600px",
-            //   overflow: "auto",
-            // },
-          }}
+          // style={{
+          //   overlay: {
+          //     position: "fixed",
+          //     // inset: 55,
+          //     // top: 0,
+          //     // left: 0,
+          //     // right: 0,
+          //     // bottom: 0,
+          //     backgroundColor: "rgba(255, 255, 255, 0.75)",
+          //   },
+          //   content: {
+          //     position: "absolute",
+          //     top: "40px",
+          //     left: "40px",
+          //     right: "40px",
+          //     bottom: "40px",
+          //     border: "1px solid #094406",
+          //     background: "#fff",
+          //     overflow: "auto",
+          //     // WebkitOverflowScrolling: "touch",
+          //     borderRadius: "20px",
+          //     borderWidth: "2px",
+          //     outline: "none",
+          //     padding: "20px",
+          //   },
+          //   // overlay: {
+          //   //   position: "fixed",
+          //   //   inset: "54px",
+          //   //   backgroundColor: "rgba(255, 255, 255, 0.85)",
+          //   //   width: "700px",
+          //   //   height: "600px",
+          //   //   overflow: "auto",
+          //   // },
+          // }}
         >
           <HikeDetails
             className="innerModal"
@@ -353,6 +505,7 @@ function SingleHike({
             parkSource={parkSource}
             onSavedPage={onSavedPage}
             stateSource={stateSource}
+            stateSourceFull={stateSourceFull}
             hikeState={hikeState}
             // style={{
             //   overlay: {

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import SingleHike from "./SingleHike.jsx";
 
 function Completed({
+  activeComp,
+  setActiveComp,
   user,
   completedHikes,
   setCompletedHikes,

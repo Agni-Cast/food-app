@@ -8,10 +8,13 @@ function Saved({
   savedHikes,
   setSavedHikes,
   stateSource,
+  stateSourceFull,
   // hikesShown,
   // setHikesShown,
   shownHikesSaved,
   setShownHikesSaved,
+  activeComp,
+  setActiveComp,
 }) {
   const [remove, setRemove] = useState(true);
   const [onSavedPage, setOnSavedPage] = useState(true);
@@ -24,6 +27,7 @@ function Saved({
   //   setStatesArray(arr);
   // }, [savedHikes]);
   // console.log("statesArray: ", statesArray);
+  // useEffect(() => {}, [shownHikesSaved]);
 
   const checkPrevState = () => {};
 

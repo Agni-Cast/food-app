@@ -125,6 +125,7 @@ app.get(`/thingstodo`, async (req, res) => {
 
 // Saving a hike
 app.post("/saved-hikes", async (req, res) => {
+  // console.log(req.body);
   try {
     const dbQuery = await db.query(
       `INSERT INTO hikes (
@@ -142,8 +143,10 @@ app.post("/saved-hikes", async (req, res) => {
       "doFeesApply",
       "feeDescription",
       age,
-      image
-        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *`,
+      image,
+      "startDate",
+      "endDate"
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17) RETURNING *`,
       [
         req.body.user_id,
         req.body.hike_id,
@@ -160,6 +163,8 @@ app.post("/saved-hikes", async (req, res) => {
         req.body.feeDescription,
         req.body.age,
         req.body.image,
+        req.body.startDate,
+        req.body.endDate,
       ]
     );
     if (dbQuery.rows.length > 0) {
@@ -180,6 +185,22 @@ app.get("/saved-hikes", async (req, res) => {
   // console.log(dbQuery.rows);
   if (dbQuery.rows.length > 0) {
     res.send(dbQuery.rows);
+  }
+});
+
+app.put(`/saved-hikes`, async (req, res) => {
+  // console.log("BODY: ", req.body);
+  const dbQuery = await db.query(
+    `UPDATE hikes SET "startDate"=$1, "endDate"=$2 WHERE user_id=$3 AND hike_id=$4 RETURNING *`,
+    [req.body.startDate, req.body.endDate, req.body.user_id, req.body.hike_id]
+  );
+  // console.log("DBQuery: ", dbQuery);
+  if (dbQuery.rowCount > 0) {
+    const dbQuery2 = await db.query(
+      `SELECT * FROM hikes WHERE user_id=$1 ORDER BY state ASC, "parkSource" ASC`,
+      [req.body.user_id]
+    );
+    res.send(dbQuery2.rows);
   }
 });
 
